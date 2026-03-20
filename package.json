@@ -16,7 +16,12 @@
 	},
 	"build": {
 		"appId": "com.poly.app",
-		"productName": "Poly",
+		"productName": "PolyWMS",
+		"publish": {
+			"provider": "github",
+			"owner": "Ic0u",
+			"repo": "PolyWMS"
+		},
 		"directories": {
 			"output": "dist"
 		},
@@ -30,6 +35,9 @@
 		},
 		"win": {
 			"target": ["nsis"]
+		},
+		"linux": {
+			"target": ["AppImage", "deb"]
 		}
 	},
 	"devDependencies": {
