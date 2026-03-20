@@ -1,0 +1,16 @@
+[10:15] START phase-01-setup
+[10:15] DONE task: Start ngrok tunnel
+[10:28] END phase-03-verification ✅
+[10:28] DONE task: Removed duplicate searchbar from +layout.svelte
+[10:31] START task: Update sidebar/layout styling to support a custom avatar picture
+[10:31] DONE task: Handled duplicate logout + avatar buttons
+[10:32] DONE task: Removed topbar from +layout.svelte
+[10:37] DONE task: Fixed the Sidebar login button misalignment and renaming default admin
+[10:42] DONE task: Final Polish and /enhance (Applied macOS typography across child pages and set Mai Quốc Tam as default)
+[10:44] DONE task: Dashboard typography fixed
+[10:23] DONE task: Redesign Sidebar to Match Codex App
+[10:28] DONE task: Apply Full Dark Mode & SF Symbol Toggle
+DONE task: Mac App Store sidebar UI & Mojave Colors
+DONE task: Added exact SF Symbol paths
+DONE task: Implemented #1B1B1C aesthetic & flat dashboard structure
+DONE task: Refined Modal.svelte with Tahoe Liquid UI
