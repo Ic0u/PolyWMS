@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
 </p>
 
-# PolyWMS
+<h1 align="center">PolyWMS</h1>
 
 **A modern, offline-first Warehouse Management System built with SvelteKit and Electron.**
 
