@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="static/AppIcon.png" alt="PolyWMS Logo" width="128" height="128" style="border-radius: 22px;" />
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white" alt="SvelteKit" />
   <img src="https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
