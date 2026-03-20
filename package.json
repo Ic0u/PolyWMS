@@ -1,7 +1,7 @@
 {
 	"name": "poly",
 	"private": true,
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"type": "module",
 	"main": "electron/main.cjs",
 	"scripts": {
@@ -12,7 +12,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"electron": "concurrently \"vite dev\" \"wait-on http://localhost:5173 && electron .\"",
-		"electron:build": "vite build && electron-builder --win --mac"
+		"electron:build": "vite build && electron-builder --win --mac --linux"
 	},
 	"build": {
 		"appId": "com.poly.app",
@@ -31,13 +31,17 @@
 			"package.json"
 		],
 		"mac": {
+			"icon": "build-resources/icon.icns",
 			"target": ["dmg"]
 		},
 		"win": {
+			"icon": "build-resources/icon.png",
 			"target": ["nsis"]
 		},
 		"linux": {
-			"target": ["AppImage", "deb"]
+			"icon": "build-resources/icon.png",
+			"target": ["AppImage", "deb"],
+			"category": "Office"
 		}
 	},
 	"devDependencies": {

@@ -36,3 +36,6 @@ logs/
 
 # Brain / Session state (AI context, not project code)
 .brain/
+
+# Electron build output
+dist/
