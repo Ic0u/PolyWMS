@@ -10,7 +10,7 @@
 
 **A modern, offline-first Warehouse Management System built with SvelteKit and Electron.**
 
-PolyWMS delivers a native desktop experience with a premium Apple-inspired UI — featuring translucent sidebars, dynamic OS accent color syncing, and smooth micro-animations — while providing robust warehouse operations including inventory tracking, stock auditing, task assignment, and real-time reporting.
+PolyWMS delivers a native desktop experience with a premium SwiftUI 6-inspired UI — featuring translucent sidebars, dynamic OS accent color syncing, and smooth micro-animations — while providing robust warehouse operations including inventory tracking, stock auditing, task assignment, and real-time reporting.
 
 ---
 
