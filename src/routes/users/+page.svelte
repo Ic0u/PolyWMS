@@ -24,7 +24,7 @@
   }
 </script>
 
-<svelte:head><title>Người dùng - Opus WMS</title></svelte:head>
+<svelte:head><title>Người dùng - Poly WMS</title></svelte:head>
 
 <div class="fade-in">
     <div class="h-col">

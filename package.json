@@ -1,5 +1,5 @@
 {
-	"name": "opus",
+	"name": "poly",
 	"private": true,
 	"version": "0.1.0",
 	"type": "module",
@@ -15,8 +15,8 @@
 		"electron:build": "vite build && electron-builder --win --mac"
 	},
 	"build": {
-		"appId": "com.opus.app",
-		"productName": "Opus",
+		"appId": "com.poly.app",
+		"productName": "Poly",
 		"directories": {
 			"output": "dist"
 		},

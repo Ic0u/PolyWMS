@@ -1,4 +1,4 @@
-const { app, BrowserWindow, nativeTheme, Notification, ipcMain } = require('electron');
+const { app, BrowserWindow, nativeTheme, Notification, ipcMain, systemPreferences } = require('electron');
 
 const path = require('path');
 
@@ -43,11 +43,31 @@ function createWindow() {
 
 app.whenReady().then(() => {
   nativeTheme.themeSource = 'dark';
-  createWindow();
   
   ipcMain.on('show-notification', (event, { title, body }) => {
     new Notification({ title, body }).show();
   });
+
+  // Send system accent color to renderer
+  ipcMain.handle('get-accent-color', () => {
+    try {
+      return '#' + systemPreferences.getAccentColor().substring(0, 6);
+    } catch { return null; }
+  });
+
+  createWindow();
+
+  // Listen for accent color changes (macOS)
+  if (process.platform === 'darwin') {
+    systemPreferences.subscribeNotification('AppleColorPreferencesChangedNotification', () => {
+      if (mainWindow) {
+        try {
+          const color = '#' + systemPreferences.getAccentColor().substring(0, 6);
+          mainWindow.webContents.send('accent-color-changed', color);
+        } catch {}
+      }
+    });
+  }
 });
 
 app.on('window-all-closed', () => {

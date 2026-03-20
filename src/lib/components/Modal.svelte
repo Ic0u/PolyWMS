@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  let { show = false, title = '', onclose, children }: {
+  let { show = false, title = '', onclose, children, wide = false }: {
     show: boolean;
     title: string;
     onclose: () => void;
     children: Snippet;
+    wide?: boolean;
   } = $props();
 </script>
 
@@ -13,7 +14,7 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="modal-overlay" onclick={(e) => { if (e.target === e.currentTarget) onclose(); }}>
-    <div class="modal-tahoe-glass">
+    <div class="modal-tahoe-glass" class:wide>
       {#if title}<h2 class="tahoe-title">{title}</h2>{/if}
       <div class="tahoe-content">
         {@render children()}
@@ -54,6 +55,9 @@
     animation: liquidPop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     transform-origin: center;
     overflow: hidden;
+  }
+  .modal-tahoe-glass.wide {
+    max-width: 680px;
   }
   
   .tahoe-title {

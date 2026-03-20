@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { products, transactions, showAlert, addAuditLog } from '$lib/stores';
+  import { products, transactions, showAlert, addAuditLog, users, currentUser } from '$lib/stores';
+  import { get } from 'svelte/store';
   import Icon from '$lib/components/Icon.svelte';
   import Modal from '$lib/components/Modal.svelte';
+
+  let currentUsername = $derived(() => {
+    const u = get(users).find(u => u.name === $currentUser);
+    return u?.username ?? '';
+  });
 
   let showModal = $state(false);
   let txType = $state<'import' | 'export'>('import');
@@ -24,7 +30,7 @@
     if (p) products.update(list => list.map(x => x.name === txProduct ? { ...x, qty: txType === 'import' ? x.qty + txQty : x.qty - txQty } : x));
     transactions.update(list => [{
       date: new Date().toLocaleString('vi-VN'),
-      type: txType, product: txProduct, qty: txQty, note: txNote || '—'
+      type: txType, product: txProduct, qty: txQty, note: txNote || '—', user: currentUsername()
     }, ...list]);
     addAuditLog(`${txType === 'import' ? 'Nhập' : 'Xuất'} kho: ${txQty}x ${txProduct}`);
     showAlert(txType === 'import' ? 'Nhập kho thành công' : 'Xuất kho thành công');
@@ -61,21 +67,23 @@
       <span class="count">{$transactions.length} giao dịch</span>
     </div>
     <table>
-      <thead><tr><th>Thời gian</th><th>Loại</th><th>Sản phẩm</th><th>SL</th><th>Ghi chú</th></tr></thead>
+      <thead>
+        <tr><th>Thời gian</th><th>Loại</th><th>Sản phẩm</th><th>Số lượng</th><th>Người tạo</th><th>Ghi chú</th></tr>
+      </thead>
       <tbody>
-        {#each $transactions as tx}
-          <tr class="row-anim">
-            <td style="color:var(--text2);font-size:12px">{tx.date}</td>
+        {#each $transactions as tx, i}
+          <tr class="row-anim" style="animation-delay:{i * 20}ms">
+            <td style="color:var(--text2);font-size:12px;white-space:nowrap">{tx.date}</td>
             <td>
               <span class="tx-badge {tx.type}">
-                <Icon name={tx.type === 'import' ? 'import' : 'export'} size={11} strokeWidth={2.5}
-                  color={tx.type === 'import' ? 'var(--green)' : 'var(--accent)'}/>
+                <Icon name={tx.type === 'import' ? 'import' : 'export'} size={11} strokeWidth={2.5} color={tx.type === 'import' ? 'var(--green)' : 'var(--accent)'}/>
                 {tx.type === 'import' ? 'Nhập' : 'Xuất'}
               </span>
             </td>
             <td style="font-weight:500">{tx.product}</td>
-            <td class="qty-cell {tx.type}">{tx.type === 'import' ? '+' : '-'}{tx.qty}</td>
-            <td style="color:var(--text2)">{tx.note}</td>
+            <td class="qty-cell {tx.type}" style="font-weight:600;font-variant-numeric:tabular-nums">{tx.type === 'import' ? '+' : '-'}{tx.qty}</td>
+            <td style="color:var(--text3)">{tx.user || '—'}</td>
+            <td style="color:var(--text3)">{tx.note}</td>
           </tr>
         {/each}
       </tbody>

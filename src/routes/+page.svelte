@@ -1,12 +1,20 @@
 <script lang="ts">
-  import { products, transactions, totalInventoryValue, formatCurrency } from '$lib/stores';
+  import { products, transactions, totalInventoryValue, lowStockProducts, formatCurrency } from '$lib/stores';
   import Icon from '$lib/components/Icon.svelte';
 
   const weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
   const weekVals = [65, 40, 80, 55, 90, 30, 20];
+
+  let todayTickets = $derived(
+    $transactions.filter(t => {
+      const d = new Date();
+      const todayStr = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+      return t.date.startsWith(todayStr);
+    }).length
+  );
 </script>
 
-<svelte:head><title>Dashboard - Opus WMS</title></svelte:head>
+<svelte:head><title>Dashboard - Poly WMS</title></svelte:head>
 
 <div class="fade-in">
   <h1 class="page-heading">Dashboard</h1>
@@ -28,7 +36,57 @@
       <div class="stat-value">{formatCurrency(Math.round($totalInventoryValue / 1e6))}M₫</div>
       <span class="stat-change up">Tổng quy đổi theo vốn</span>
     </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Phiếu hôm nay</span>
+        <div class="stat-icon-sm yellow" style="background:rgba(245,158,11,0.12)"><Icon name="edit" size={14} color="#F59E0B" strokeWidth={2}/></div>
+      </div>
+      <div class="stat-value">{todayTickets}</div>
+      <span class="stat-change">Nhập & xuất trong ngày</span>
+    </div>
   </div>
+
+  <!-- Stock Alerts Section -->
+  {#if $lowStockProducts.length > 0}
+    <div class="alert-section">
+      <div class="alert-header">
+        <div class="alert-title-row">
+          <Icon name="bell" size={16} color="var(--red)" strokeWidth={2}/>
+          <h3>Cảnh báo tồn kho</h3>
+        </div>
+        <span class="alert-count badge badge-red">{$lowStockProducts.length} sản phẩm</span>
+      </div>
+      <div class="alert-grid">
+        {#each $lowStockProducts as p}
+          <div class="alert-card">
+            <div class="alert-card-top">
+              <Icon name="warning" size={16} color="var(--red)" strokeWidth={2}/>
+              <span class="alert-product">{p.name}</span>
+            </div>
+            <div class="alert-card-stats">
+              <div class="alert-stat">
+                <span class="alert-stat-label">Tồn kho</span>
+                <span class="alert-stat-value red">{p.qty}</span>
+              </div>
+              <div class="alert-stat">
+                <span class="alert-stat-label">Tối thiểu</span>
+                <span class="alert-stat-value">{p.min}</span>
+              </div>
+              <div class="alert-stat">
+                <span class="alert-stat-label">Thiếu</span>
+                <span class="alert-stat-value red">-{p.min - p.qty}</span>
+              </div>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
+  {:else}
+    <div class="ok-banner">
+      <Icon name="check" size={16} color="var(--green)" strokeWidth={2.5}/>
+      <span>Kho hàng ổn định — Không có sản phẩm nào dưới mức tối thiểu</span>
+    </div>
+  {/if}
 
   <div class="chart-card">
     <h3 class="card-title">Nhập/Xuất trong tuần</h3>
@@ -84,7 +142,7 @@
     height: 120px;
     gap: 12px;
     padding-bottom: 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.05); /* Baseline */
+    border-bottom: 1px solid rgba(255,255,255,0.05);
   }
   .bar-wrapper {
     flex: 1;
@@ -110,5 +168,103 @@
     font-size: 10px;
     color: #8E8E93;
     font-weight: 500;
+  }
+
+  /* ── Stock Alert Section ── */
+  .alert-section {
+    margin-bottom: 40px;
+  }
+  .alert-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .alert-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert-title-row h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .alert-count {
+    font-size: 11px;
+  }
+  .alert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .alert-card {
+    background: rgba(255, 69, 58, 0.06);
+    border: 0.5px solid rgba(255, 69, 58, 0.15);
+    border-radius: var(--r-xl);
+    padding: 16px;
+    transition: transform 0.3s var(--spring);
+  }
+  .alert-card:hover {
+    transform: translateY(-2px);
+  }
+  .alert-card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .alert-product {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .alert-card-stats {
+    display: flex;
+    gap: 16px;
+  }
+  .alert-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .alert-stat-label {
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .alert-stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .alert-stat-value.red {
+    color: var(--red);
+  }
+
+  .ok-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    background: rgba(48, 209, 88, 0.06);
+    border: 0.5px solid rgba(48, 209, 88, 0.15);
+    border-radius: var(--r-xl);
+    margin-bottom: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green);
+  }
+
+  @media (max-width: 768px) {
+    .alert-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

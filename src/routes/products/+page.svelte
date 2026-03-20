@@ -8,10 +8,16 @@
   let searchQuery = $state('');
   let form = $state<Product>({ id: '', name: '', category: 'Điện tử', qty: 0, price: 0, min: 10 });
 
+  let selectedCategory = $state('Tất cả');
+
+  let categories = $derived(['Tất cả', ...new Set($products.map(p => p.category))]);
+
   let filtered = $derived(
-    searchQuery
-      ? $products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toLowerCase().includes(searchQuery.toLowerCase()))
-      : $products
+    $products.filter(p => {
+      const matchQuery = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchCat = selectedCategory === 'Tất cả' || p.category === selectedCategory;
+      return matchQuery && matchCat;
+    })
   );
 
   function openAdd() {
@@ -22,6 +28,10 @@
   function openEdit(p: Product) { editing = true; form = { ...p }; showModal = true; }
   function save() {
     if (!form.name) { showAlert('Vui lòng nhập tên sản phẩm', 'error'); return; }
+    if (!editing && $products.some(p => p.id === form.id)) {
+      showAlert('Thất bại: Mã sản phẩm đã tồn tại!', 'error');
+      return;
+    }
     if (editing) {
       products.update(list => list.map(p => p.id === form.id ? { ...form } : p));
       addAuditLog(`Cập nhật: ${form.name}`);
@@ -42,16 +52,23 @@
   }
 </script>
 
-<svelte:head><title>Sản phẩm - Opus WMS</title></svelte:head>
+<svelte:head><title>Sản phẩm - Poly WMS</title></svelte:head>
 
 <div class="fade-in">
     <div class="h-col">
       <h1 class="page-title">Danh sách Sản phẩm</h1>
     </div>
   <div class="toolbar">
-    <div class="search-wrap">
-      <Icon name="search" size={13} color="var(--text3)" strokeWidth={2.5}/>
-      <input class="search-input" type="text" placeholder="Tìm kiếm sản phẩm..." bind:value={searchQuery} />
+    <div style="display:flex;gap:12px;flex:1;max-width:500px;">
+      <div class="search-wrap" style="flex:1">
+        <Icon name="search" size={13} color="var(--text3)" strokeWidth={2.5}/>
+        <input class="search-input" type="text" placeholder="Tìm kiếm sản phẩm..." bind:value={searchQuery} />
+      </div>
+      <select class="apple-select" bind:value={selectedCategory}>
+        {#each categories as cat}
+          <option value={cat}>{cat}</option>
+        {/each}
+      </select>
     </div>
     <button class="btn btn-primary btn-sm" onclick={openAdd}>
       <Icon name="plus" size={13} color="white" strokeWidth={2.5}/>
@@ -111,3 +128,25 @@
     <button class="btn btn-primary" onclick={save}>Lưu</button>
   </div>
 </Modal>
+
+<style>
+  .apple-select {
+    width: 140px;
+    font-size: 13px;
+    padding: 6px 10px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--separator-op);
+    border-radius: var(--r-md);
+    color: var(--text);
+    font-family: var(--font);
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    appearance: auto;
+  }
+  .apple-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-op);
+  }
+</style>

@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { currentRole, currentUser, ROLE_NAMES, isLoggedIn, isSidebarOpen } from '$lib/stores';
+  import { currentRole, currentUser, ROLE_NAMES, isLoggedIn, isSidebarOpen, users } from '$lib/stores';
   import { page } from '$app/state';
+  import { goto } from '$app/navigation';
+  import { get } from 'svelte/store';
   import Icon from '$lib/components/Icon.svelte';
 
   let path = $derived(page.url.pathname);
@@ -9,21 +11,28 @@
     staff: [
       { href: '/', icon: 'dashboard', label: 'Dashboard' },
       { href: '/products', icon: 'products', label: 'Sản phẩm' },
-      { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' }
+      { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' },
+      { href: '/tasks', icon: 'tasks', label: 'Công việc' }
     ],
     manager: [
       { href: '/', icon: 'dashboard', label: 'Dashboard' },
       { href: '/products', icon: 'products', label: 'Sản phẩm' },
       { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' },
+      { href: '/tasks', icon: 'tasks', label: 'Công việc' },
       { href: '/reports', icon: 'reports', label: 'Báo cáo' },
-      { href: '/suppliers', icon: 'suppliers', label: 'Nhà cung cấp' }
+      { href: '/suppliers', icon: 'suppliers', label: 'Nhà cung cấp' },
+      { href: '/stocktake', icon: 'stocktake', label: 'Kiểm kê' },
+      { href: '/audit', icon: 'audit', label: 'Nhật ký' }
     ],
     admin: [
       { href: '/', icon: 'dashboard', label: 'Dashboard' },
       { href: '/products', icon: 'products', label: 'Sản phẩm' },
       { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' },
+      { href: '/tasks', icon: 'tasks', label: 'Công việc' },
       { href: '/reports', icon: 'reports', label: 'Báo cáo' },
       { href: '/suppliers', icon: 'suppliers', label: 'Nhà cung cấp' },
+      { href: '/stocktake', icon: 'stocktake', label: 'Kiểm kê' },
+      { href: '/audit', icon: 'audit', label: 'Nhật ký' },
       { href: '/users', icon: 'users', label: 'Người dùng' }
     ]
   };
@@ -37,6 +46,21 @@
       ? items
       : items.filter(item => item.label.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  // Resolve avatar path from username (e.g., "nam" → "/nam.jpg")
+  // Falls back to icon on error via onerror handler
+  let avatarSrc = $derived(() => {
+    const userList = get(users);
+    const found = userList.find(u => u.name === $currentUser);
+    return found ? `/${found.username}.jpg` : null;
+  });
+
+  let imgError = $state(false);
+  $effect(() => {
+    // reset error flag whenever user changes
+    $currentUser;
+    imgError = false;
+  });
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -70,13 +94,18 @@
   </nav>
 
   <div class="sidebar-bottom">
-    <button class="user-row" onclick={() => { if(window.confirm('Bạn có chắc chắn muốn đăng xuất?')) isLoggedIn.set(false); }}>
+    <button class="user-row" onclick={() => { if(window.confirm('Bạn có chắc chắn muốn đăng xuất?')) { isLoggedIn.set(false); goto('/'); } }}>
       <div class="user-info-wrapper">
-        <div class="avatar" style="overflow: hidden; padding: 0;">
-          {#if $currentUser === 'Test User'}
-            <Icon name="default-avatar" size={36} color="#8E8E93" strokeWidth={0} />
+        <div class="avatar avatar-container">
+          {#if !imgError && avatarSrc()}
+            <img
+              src={avatarSrc()}
+              alt={$currentUser}
+              class="avatar-img"
+              onerror={() => imgError = true}
+            />
           {:else}
-            <img src="/avatar.jpg" alt="{$currentUser}" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" />
+            <Icon name="default-avatar" size={36} color="#8E8E93" strokeWidth={0} />
           {/if}
         </div>
         <div class="user-details">
@@ -92,9 +121,11 @@
   .sidebar {
     width: 250px;
     flex-shrink: 0;
-    /* Codex style relies entirely on the window's dark vibrancy/color */
-    background: transparent;
-    border-right: 0.5px solid rgba(255,255,255,0.06);
+    /* Windows Acrylic / Lighter Vibrancy Sidebar */
+    background: rgba(30, 30, 32, 0.3);
+    backdrop-filter: blur(20px) saturate(150%) brightness(0.95);
+    -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(0.95);
+    border-right: 0.5px solid rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -197,6 +228,10 @@
   .nav-item:hover {
     color: white;
   }
+  
+  .nav-icon {
+    color: var(--accent);
+  }
 
   /* Active: white text on subtle gray pill */
   .nav-item.active {
@@ -288,5 +323,16 @@
     .mobile-close {
       display: flex;
     }
+  }
+
+  .avatar-container {
+    overflow: hidden;
+    padding: 0;
+  }
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
   }
 </style>

@@ -1,6 +1,8 @@
 <script lang="ts">
   import '$lib/styles/global.css';
-  import { isLoggedIn, currentUser, alertMessage, isSidebarOpen } from '$lib/stores';
+  import { isLoggedIn, currentUser, currentRole, alertMessage, isSidebarOpen } from '$lib/stores';
+  import { page } from '$app/state';
+  import { goto } from '$app/navigation';
   import Login from '$lib/components/Login.svelte';
   import Sidebar from '$lib/components/Sidebar.svelte';
   import Icon from '$lib/components/Icon.svelte';
@@ -14,6 +16,38 @@
             title: $alertMessage.type === 'error' ? 'Lỗi' : 'Thành công',
             body: $alertMessage.text
         });
+    }
+  });
+
+  // Sync accent color with OS (macOS/Windows)
+  $effect(() => {
+    if (typeof window !== 'undefined' && (window as any).electronAPI?.getAccentColor) {
+      (window as any).electronAPI.getAccentColor().then((color: string | null) => {
+        if (color) document.documentElement.style.setProperty('--accent', color);
+      });
+      (window as any).electronAPI.onAccentColorChanged?.((color: string) => {
+        document.documentElement.style.setProperty('--accent', color);
+      });
+    }
+  });
+
+  // Page-Level Route Guard (RBAC)
+  $effect(() => {
+    if ($isLoggedIn) {
+      const path = page.url.pathname;
+      const role = $currentRole;
+      
+      const roleAccess: Record<string, string[]> = {
+        staff: ['/', '/products', '/inventory', '/tasks'],
+        manager: ['/', '/products', '/inventory', '/reports', '/suppliers', '/stocktake', '/audit', '/tasks'],
+      };
+
+      if (role !== 'admin') {
+        const allowedRoutes = roleAccess[role] || [];
+        if (path !== '/' && !allowedRoutes.some(r => path === r || (r !== '/' && path.startsWith(r + '/')))) {
+          goto('/');
+        }
+      }
     }
   });
 </script>
@@ -37,7 +71,7 @@
         <button class="hamburger-btn" onclick={() => $isSidebarOpen = true}>
           <Icon name="menu" size={24} color="var(--text)" />
         </button>
-        <div class="mobile-brand">Opus WMS</div>
+        <div class="mobile-brand">Poly WMS</div>
         <div class="mobile-spacer"></div>
       </div>
 
