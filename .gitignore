@@ -1,12 +1,19 @@
 node_modules
 
-# Output
+# Output / Build
 .output
 .vercel
 .netlify
 .wrangler
 /.svelte-kit
 /build
+/dist
+/out
+/release
+
+# Electron build output
+electron-dist/
+electron/dist/
 
 # OS
 .DS_Store
@@ -21,3 +28,11 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Logs
+*.log
+ngrok.log
+logs/
+
+# Brain / Session state (AI context, not project code)
+.brain/
