@@ -66,17 +66,27 @@ Three distinct roles — **Admin**, **Manager**, **Staff** — with granular rou
 ### 📦 Inventory Management
 Complete stock-in and stock-out workflows with real-time quantity tracking. Every transaction is timestamped and attributed to the user who performed it.
 
+<img src="docs/screenshots/inventory.png" alt="Inventory Management" width="600" style="border-radius: 8px; margin: 10px 0;" />
+
 ### 📊 Reports & Analytics
 Interactive bar charts showing import/export trends. Filter transactions by date range, type, or product. Export everything to **CSV** with one click.
+
+<img src="docs/screenshots/reports.png" alt="Reports and Analytics" width="600" style="border-radius: 8px; margin: 10px 0;" />
 
 ### ✅ Task Assignment
 Managers can assign, prioritize, and track tasks for warehouse staff. Tasks flow through `Pending → In Progress → Done` with full audit trails.
 
+<img src="docs/screenshots/tasks.png" alt="Task Assignment" width="600" style="border-radius: 8px; margin: 10px 0;" />
+
 ### 🏭 Stocktake
 Periodic physical inventory counts with automatic discrepancy detection between recorded and actual stock levels.
 
-### 📋 Audit Trail
-Dual-purpose logging system capturing both administrative actions and warehouse transactions for complete operational transparency.
+<img src="docs/screenshots/stocktake.png" alt="Stocktake" width="600" style="border-radius: 8px; margin: 10px 0;" />
+
+### 📋 Audit Trail & Product List
+Dual-purpose logging system capturing both administrative actions and warehouse transactions, paired with a comprehensive master data product list.
+
+<img src="docs/screenshots/products.png" alt="Product List" width="600" style="border-radius: 8px; margin: 10px 0;" />
 
 ### 🎨 Apple-Native Design System
 A premium "Tahoe Liquid Glass" UI with:
