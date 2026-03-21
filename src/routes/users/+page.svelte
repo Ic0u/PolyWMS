@@ -77,11 +77,11 @@
 </div>
 
 <Modal show={showModal} title="Thêm người dùng" onclose={() => showModal=false}>
-  <div class="form-group"><label>Username</label><input bind:value={form.username} placeholder="username..."/></div>
-  <div class="form-group"><label>Họ tên</label><input bind:value={form.name} placeholder="Nguyễn Văn ..."/></div>
+  <div class="form-group"><label for="user-username">Username</label><input id="user-username" bind:value={form.username} placeholder="username..."/></div>
+  <div class="form-group"><label for="user-name">Họ tên</label><input id="user-name" bind:value={form.name} placeholder="Nguyễn Văn ..."/></div>
   <div class="form-group">
-    <label>Vai trò</label>
-    <select bind:value={form.role}>
+    <label for="user-role">Vai trò</label>
+    <select id="user-role" bind:value={form.role}>
       <option value="staff">Nhân viên</option>
       <option value="manager">Quản lý</option>
       <option value="admin">Quản trị</option>

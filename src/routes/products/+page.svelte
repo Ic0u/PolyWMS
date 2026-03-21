@@ -110,18 +110,18 @@
 </div>
 
 <Modal show={showModal} title={editing ? 'Sửa sản phẩm' : 'Thêm sản phẩm'} onclose={() => showModal = false}>
-  <div class="form-group"><label>Mã SP</label><input bind:value={form.id} readonly={editing} /></div>
-  <div class="form-group"><label>Tên sản phẩm</label><input bind:value={form.name} placeholder="Tên sản phẩm..." /></div>
+  <div class="form-group"><label for="prod-id">Mã SP</label><input id="prod-id" bind:value={form.id} readonly={editing} /></div>
+  <div class="form-group"><label for="prod-name">Tên sản phẩm</label><input id="prod-name" bind:value={form.name} placeholder="Tên sản phẩm..." /></div>
   <div class="form-group">
-    <label>Danh mục</label>
-    <select bind:value={form.category}>
+    <label for="prod-cat">Danh mục</label>
+    <select id="prod-cat" bind:value={form.category}>
       <option>Điện tử</option><option>Điện thoại</option><option>Phụ kiện</option>
     </select>
   </div>
   <div class="form-grid">
-    <div class="form-group"><label>Số lượng</label><input type="number" bind:value={form.qty} min="0" /></div>
-    <div class="form-group"><label>Đơn giá (₫)</label><input type="number" bind:value={form.price} min="0" /></div>
-    <div class="form-group"><label>Tồn tối thiểu</label><input type="number" bind:value={form.min} min="1" /></div>
+    <div class="form-group"><label for="prod-qty">Số lượng</label><input id="prod-qty" type="number" bind:value={form.qty} min="0" /></div>
+    <div class="form-group"><label for="prod-price">Đơn giá (₫)</label><input id="prod-price" type="number" bind:value={form.price} min="0" /></div>
+    <div class="form-group"><label for="prod-min">Tồn tối thiểu</label><input id="prod-min" type="number" bind:value={form.min} min="1" /></div>
   </div>
   <div class="modal-actions">
     <button class="btn btn-secondary" onclick={() => showModal = false}>Huỷ</button>

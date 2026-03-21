@@ -163,21 +163,21 @@
 <!-- New Task Modal -->
 <Modal show={showModal} title="Giao công việc mới" onclose={() => showModal = false}>
   <div class="form-group">
-    <label>Tên công việc</label>
-    <input bind:value={form.title} placeholder="VD: Kiểm kê lô hàng Apple kho A" />
+    <label for="task-title">Tên công việc</label>
+    <input id="task-title" bind:value={form.title} placeholder="VD: Kiểm kê lô hàng Apple kho A" />
   </div>
   <div class="form-grid" style="grid-template-columns:1fr 1fr">
     <div class="form-group">
-      <label>Giao cho</label>
-      <select bind:value={form.assignee}>
+      <label for="task-assignee">Giao cho</label>
+      <select id="task-assignee" bind:value={form.assignee}>
         {#each staffList as s}
           <option value={s.username}>{s.name}</option>
         {/each}
       </select>
     </div>
     <div class="form-group">
-      <label>Độ ưu tiên</label>
-      <select bind:value={form.priority}>
+      <label for="task-priority">Độ ưu tiên</label>
+      <select id="task-priority" bind:value={form.priority}>
         <option value="high">Cao</option>
         <option value="medium">Trung bình</option>
         <option value="low">Thấp</option>
@@ -185,12 +185,12 @@
     </div>
   </div>
   <div class="form-group">
-    <label>Hạn hoàn thành</label>
-    <input bind:value={form.dueDate} placeholder="VD: 25/03/2026" />
+    <label for="task-due">Hạn hoàn thành</label>
+    <input id="task-due" bind:value={form.dueDate} placeholder="VD: 25/03/2026" />
   </div>
   <div class="form-group">
-    <label>Ghi chú</label>
-    <input bind:value={form.note} placeholder="Ghi chú thêm (không bắt buộc)" />
+    <label for="task-note">Ghi chú</label>
+    <input id="task-note" bind:value={form.note} placeholder="Ghi chú thêm (không bắt buộc)" />
   </div>
   <div class="modal-actions">
     <button class="btn btn-secondary" onclick={() => showModal = false}>Huỷ</button>

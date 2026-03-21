@@ -68,14 +68,14 @@
 </div>
 
 <Modal show={showModal} title={editing ? 'Sửa nhà cung cấp' : 'Thêm nhà cung cấp'} onclose={() => showModal=false}>
-  <div class="form-group"><label>Mã NCC</label><input bind:value={form.id} readonly={editing}/></div>
-  <div class="form-group"><label>Tên nhà cung cấp</label><input bind:value={form.name} placeholder="Tên NCC..."/></div>
+  <div class="form-group"><label for="sup-id">Mã NCC</label><input id="sup-id" bind:value={form.id} readonly={editing}/></div>
+  <div class="form-group"><label for="sup-name">Tên nhà cung cấp</label><input id="sup-name" bind:value={form.name} placeholder="Tên NCC..."/></div>
   <div class="form-grid" style="grid-template-columns:1fr 1fr">
-    <div class="form-group"><label>Người liên hệ</label><input bind:value={form.contact} placeholder="Họ tên..."/></div>
-    <div class="form-group"><label>Điện thoại</label><input bind:value={form.phone} placeholder="Số ĐT..."/></div>
+    <div class="form-group"><label for="sup-contact">Người liên hệ</label><input id="sup-contact" bind:value={form.contact} placeholder="Họ tên..."/></div>
+    <div class="form-group"><label for="sup-phone">Điện thoại</label><input id="sup-phone" bind:value={form.phone} placeholder="Số ĐT..."/></div>
   </div>
-  <div class="form-group"><label>Email</label><input bind:value={form.email} placeholder="email@example.com"/></div>
-  <div class="form-group"><label>Địa chỉ</label><input bind:value={form.address} placeholder="Địa chỉ..."/></div>
+  <div class="form-group"><label for="sup-email">Email</label><input id="sup-email" bind:value={form.email} placeholder="email@example.com"/></div>
+  <div class="form-group"><label for="sup-addr">Địa chỉ</label><input id="sup-addr" bind:value={form.address} placeholder="Địa chỉ..."/></div>
   <div class="modal-actions">
     <button class="btn btn-secondary" onclick={() => showModal=false}>Huỷ</button>
     <button class="btn btn-primary" onclick={save}>Lưu</button>

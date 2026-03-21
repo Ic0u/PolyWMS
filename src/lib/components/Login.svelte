@@ -72,6 +72,7 @@
       <button class="btn-signin" onclick={handleLogin}>Đăng nhập</button>
       
       <div class="forgot-row">
+        <!-- svelte-ignore a11y_invalid_attribute -->
         <a href="#" class="forgot-link">Quên mật khẩu?</a>
       </div>
       

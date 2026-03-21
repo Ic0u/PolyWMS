@@ -4,37 +4,54 @@ on:
     tags:
       - 'v*'
 
-jobs:
-  release:
-    name: Build and Release for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+permissions:
+  contents: write
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+jobs:
+  release-mac:
+    name: Build macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
+      - run: npm install
+      - run: npm run build
+      - name: Build Electron (macOS)
+        run: npx electron-builder --mac --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Dependencies
-        run: npm install
+  release-win:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build
+      - name: Build Electron (Windows)
+        run: npx electron-builder --win --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build SvelteKit App
-        run: npm run build
-
-      - name: Build and Publish Electron App
-        run: |
-          if [ "$RUNNER_OS" == "macOS" ]; then
-            npx electron-builder --mac --publish always
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            npx electron-builder --win --publish always
-          elif [ "$RUNNER_OS" == "Linux" ]; then
-            npx electron-builder --linux --publish always
-          fi
+  release-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build
+      - name: Build Electron (Linux)
+        run: npx electron-builder --linux --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
