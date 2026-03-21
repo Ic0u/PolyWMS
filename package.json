@@ -1,7 +1,7 @@
 {
 	"name": "poly",
 	"private": true,
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "A modern, offline-first Warehouse Management System",
 	"author": "Nam Nguyễn <namnts01718@gmail.com>",
 	"type": "module",
@@ -42,8 +42,8 @@
 		"win": {
 			"icon": "build-resources/icon.png",
 			"target": [
-				{ "target": "nsis", "arch": ["x64"] },
-				{ "target": "msi", "arch": ["x64"] }
+				{ "target": "nsis", "arch": ["x64", "arm64", "ia32"] },
+				{ "target": "msi", "arch": ["x64", "arm64", "ia32"] }
 			]
 		},
 		"linux": {
