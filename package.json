@@ -1,7 +1,7 @@
 {
 	"name": "poly",
 	"private": true,
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A modern, offline-first Warehouse Management System",
 	"author": "Nam Nguyễn <namnts01718@gmail.com>",
 	"type": "module",
