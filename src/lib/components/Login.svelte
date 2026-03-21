@@ -6,6 +6,12 @@
 
   let username = $state('');
   let password = $state('');
+  let showPassword = $state(false);
+
+  function showComingSoon(feature: string, e?: Event) {
+    if (e) e.preventDefault();
+    alert(`Sắp ra mắt: Tính năng ${feature} đang được phát triển.`);
+  }
 
   function handleLogin() {
     const userList = get(users);
@@ -58,11 +64,19 @@
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <input type="password" bind:value={password} placeholder="••••••••••••" />
-          <svg class="icon icon-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-            <circle cx="12" cy="12" r="3" />
-          </svg>
+          <input type={showPassword ? 'text' : 'password'} bind:value={password} placeholder="••••••••••••" />
+          <button type="button" class="icon-action-btn" aria-label="Toggle password visibility" onclick={() => showPassword = !showPassword}>
+            {#if showPassword}
+              <svg class="icon icon-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"/>
+              </svg>
+            {:else}
+              <svg class="icon icon-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            {/if}
+          </button>
         </div>
         
 
@@ -72,8 +86,7 @@
       <button class="btn-signin" onclick={handleLogin}>Đăng nhập</button>
       
       <div class="forgot-row">
-        <!-- svelte-ignore a11y_invalid_attribute -->
-        <a href="#" class="forgot-link">Quên mật khẩu?</a>
+        <a href="#" class="forgot-link" onclick={(e) => showComingSoon('Quên mật khẩu', e)}>Quên mật khẩu?</a>
       </div>
       
       <div class="divider">
@@ -82,20 +95,20 @@
       
       <div class="social-row">
         <!-- Google -->
-        <button class="social-btn">
+        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập Google')}>
           <Icon name="google" size={18} />
         </button>
         <!-- Meta -->
-        <button class="social-btn">
+        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập Meta')}>
           <Icon name="meta" size={22} />
         </button>  
         <!-- Twitter -->
-        <button class="social-btn">
+        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập X')}>
           <Icon name="twitter" size={18} />
         </button>
       </div>
       
-      <p class="signup-row">Chưa có tài khoản? <strong>Đăng ký ngay</strong></p>
+      <p class="signup-row">Chưa có tài khoản? <strong onclick={(e) => showComingSoon('Đăng ký tài khoản', e)} role="button" tabindex="0" onkeydown={(e) => {if(e.key === 'Enter') showComingSoon('Đăng ký tài khoản', e)}}>Đăng ký ngay</strong></p>
       <p class="terms-row">Bằng cách nhấp vào nút trên, bạn đồng ý với <u>Điều khoản sử dụng</u> và <u>Chính sách quyền riêng tư</u></p>
     </div>
   </div>
@@ -240,6 +253,10 @@
     width: 18px; 
     color: rgba(255,255,255,0.4);
     flex-shrink: 0;
+  }
+  .icon-action-btn {
+    background: none; border: none; padding: 0; outline: none;
+    display: flex; align-items: center; justify-content: center;
   }
   .icon-action {
     color: rgba(255,255,255,0.3);
