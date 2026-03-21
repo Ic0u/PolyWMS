@@ -1,6 +1,12 @@
-const { app, BrowserWindow, nativeTheme, Notification, ipcMain, systemPreferences } = require('electron');
+const { app, BrowserWindow, nativeTheme, Notification, ipcMain, systemPreferences, protocol, net } = require('electron');
 
 const path = require('path');
+const fs = require('fs');
+const { pathToFileURL } = require('url');
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { secure: true, standard: true, supportFetchAPI: true } }
+]);
 
 let mainWindow;
 
@@ -29,7 +35,7 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools(); // Uncomment for debugging
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
+    mainWindow.loadURL('app://-/');
   }
 
   mainWindow.once('ready-to-show', () => {
@@ -42,6 +48,24 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  protocol.handle('app', (request) => {
+    const requestUrl = new URL(request.url);
+    let filePath = requestUrl.pathname;
+    if (!filePath || filePath === '/') filePath = '/index.html';
+    
+    // Decode URI to handle spaces and special characters
+    filePath = decodeURI(filePath);
+
+    const absolutePath = path.join(__dirname, '../build', filePath);
+    
+    // SPA fallback: if file not found, serve index.html
+    if (!fs.existsSync(absolutePath) || fs.statSync(absolutePath).isDirectory()) {
+      return net.fetch(pathToFileURL(path.join(__dirname, '../build/index.html')).toString());
+    }
+    
+    return net.fetch(pathToFileURL(absolutePath).toString());
+  });
+
   nativeTheme.themeSource = 'dark';
   
   ipcMain.on('show-notification', (event, { title, body }) => {
