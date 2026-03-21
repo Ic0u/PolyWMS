@@ -88,14 +88,7 @@ Dual-purpose logging system capturing both administrative actions and warehouse 
 
 <img src="docs/screenshots/products.png" alt="Product List" width="600" style="border-radius: 8px; margin: 10px 0;" />
 
-### 🎨 Apple-Native Design System
-A premium "Tahoe Liquid Glass" UI with:
-- Translucent acrylic sidebar with `backdrop-filter` blur
-- Dynamic accent color synced from macOS/Windows system preferences via Electron IPC
-- SF Pro typography and SF Symbol-style SVG icons
-- Smooth spring-based animations
-
-### 🔌 Offline-First
+### 🔌 Offline-Database
 All data persists locally via `localStorage` with a versioned migration system. No server, no database setup, no internet required.
 
 ---
