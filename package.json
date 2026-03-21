@@ -42,8 +42,7 @@
 		"win": {
 			"icon": "build-resources/icon.png",
 			"target": [
-				{ "target": "nsis", "arch": ["x64", "arm64", "ia32"] },
-				{ "target": "msi", "arch": ["x64", "arm64", "ia32"] }
+				{ "target": "nsis", "arch": ["x64", "arm64", "ia32"] }
 			]
 		},
 		"linux": {
