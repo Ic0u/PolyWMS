@@ -93,13 +93,13 @@
 
 <Modal show={showModal} title={txType === 'import' ? 'Nhập kho' : 'Xuất kho'} onclose={() => showModal = false}>
   <div class="form-group">
-    <label>Sản phẩm</label>
-    <select bind:value={txProduct}>
+    <label for="tx-product">Sản phẩm</label>
+    <select id="tx-product" bind:value={txProduct}>
       {#each $products as p}<option>{p.name}</option>{/each}
     </select>
   </div>
-  <div class="form-group"><label>Số lượng</label><input type="number" bind:value={txQty} min="1" /></div>
-  <div class="form-group"><label>Ghi chú</label><input bind:value={txNote} placeholder="Lý do nhập/xuất..." /></div>
+  <div class="form-group"><label for="tx-qty">Số lượng</label><input id="tx-qty" type="number" bind:value={txQty} min="1" /></div>
+  <div class="form-group"><label for="tx-note">Ghi chú</label><input id="tx-note" bind:value={txNote} placeholder="Lý do nhập/xuất..." /></div>
   <div class="modal-actions">
     <button class="btn btn-secondary" onclick={() => showModal = false}>Huỷ</button>
     <button class="btn btn-primary" onclick={saveTx}>Xác nhận</button>

@@ -28,6 +28,13 @@ jobs:
         run: npm run build
 
       - name: Build and Publish Electron App
-        run: npm run electron:build -- --publish always
+        run: |
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            npx electron-builder --mac --publish always
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            npx electron-builder --win --publish always
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+            npx electron-builder --linux --publish always
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
