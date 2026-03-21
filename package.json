@@ -3,7 +3,7 @@
 	"private": true,
 	"version": "1.0.1",
 	"description": "A modern, offline-first Warehouse Management System",
-	"author": "Nam Nguyễn <nicknguyen.personal@gmail.com>",
+	"author": "Nam Nguyễn <namnts01718@gmail.com>",
 	"type": "module",
 	"main": "electron/main.cjs",
 	"scripts": {
