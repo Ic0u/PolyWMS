@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  PolyWMS delivers a native desktop experience with a premium Apple-inspired UI — featuring<br/>
+  PolyWMS delivers a native desktop experience with SwiftUI 6 UI — featuring<br/>
   translucent sidebars, dynamic OS accent color syncing, and smooth micro-animations — while<br/>
   providing robust warehouse operations including inventory tracking, stock auditing,<br/>
   task assignment, and real-time reporting.
@@ -52,7 +52,7 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
 
 | Role | What they get |
 |------|-------------|
-| **Warehouse Staff** | Simple product lookup, stock-in/stock-out, and task tracking |
+| **Staff** | Simple product lookup, stock-in/stock-out, and task tracking |
 | **Managers** | Real-time dashboards, reporting with CSV export, and task assignment |
 | **Administrators** | Full user management, audit logs, and role-based access control |
 
