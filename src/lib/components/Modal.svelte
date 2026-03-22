@@ -80,4 +80,28 @@
     0% { opacity: 0; transform: scale(0.9) translateY(30px); filter: blur(4px); }
     100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
   }
+
+  /* Light mode modal — clean white Apple sheet */
+  :global(html.light) .modal-overlay {
+    background: rgba(0, 0, 0, 0.25);
+  }
+  :global(html.light) .modal-tahoe-glass {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(60px) saturate(200%);
+    -webkit-backdrop-filter: blur(60px) saturate(200%);
+    border: 0.5px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.8),
+      inset 0 -0.5px 1px rgba(0, 0, 0, 0.08),
+      0 24px 80px rgba(0, 0, 0, 0.18),
+      0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  }
+  :global(html.light) .tahoe-title {
+    color: #1D1D1F;
+    text-shadow: none;
+  }
+  :global(html.light) .tahoe-content {
+    color: #424245;
+  }
 </style>

@@ -113,6 +113,100 @@
   --transition-fast: all 0.18s var(--spring);
 }
 
+/* ── Light Mode (macOS Catalina App Store Palette) ── */
+html.light {
+  /* Core Palette (Light) */
+  --apple-black:   #1D1D1F;
+  --apple-gray1:   #424245;
+  --apple-gray2:   #6E6E73;
+  --apple-gray3:   #86868B;
+  --apple-gray4:   #D2D2D7;
+  --apple-gray5:   #E5E5EA;
+  --apple-gray6:   #F2F2F7;
+  --apple-white:   #FFFFFF;
+
+  /* Semantic Aliases (Catalina App Store Light) */
+  --bg:             #F2F2F7; /* Apple Grouped System Background */
+  --bg-elevated:    #FFFFFF; /* White cards stand out clearly on grouped bg */
+  --surface:        #FFFFFF;
+  --border:         rgba(0,0,0,0.04); /* Very subtle card borders */
+  --border-strong:  rgba(0,0,0,0.1);
+  --separator:      rgba(0,0,0,0.08);
+  --separator-op:   rgba(0,0,0,0.05);
+  --fill:           rgba(0,0,0,0.04);
+
+  /* Text aliases (Dark text on light) */
+  --text:   #1D1D1F;
+  --text2:  #424245;
+  --text3:  #6E6E73;
+  --text4:  #86868B;
+
+  /* Backwards-compat aliases */
+  --label:  var(--text);
+  --label2: var(--text2);
+  --label3: var(--text3);
+  --label4: var(--text4);
+
+  /* Glass Design Tokens (Light) */
+  --glass-bg:        #FFFFFF;
+  --glass-bg-subtle: rgba(255, 255, 255, 0.7);
+  --glass-border:    rgba(0,0,0,0.08);
+  --glass-edge:      none;
+  --glass-blur:      blur(20px);
+  --glass-blur-sm:   blur(12px);
+  --glass-tint:      rgba(0,0,0,0.03);
+
+  /* Shadows (Apple Style Soft Drop Shadows for White-on-White separation) */
+  --shadow-xs: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-sm: 0 4px 14px rgba(0,0,0,0.05); /* Apple card shadow */
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.08);
+  --shadow-glass: 0 4px 14px rgba(0,0,0,0.04);
+}
+
+/* Light mode: fix bar chart + scrollbar */
+html.light .bar { background: var(--accent); opacity: 0.8; }
+html.light .bar:hover { background: var(--accent); opacity: 1; }
+html.light ::-webkit-scrollbar-thumb { background: var(--apple-gray4); }
+html.light ::-webkit-scrollbar-thumb:hover { background: var(--apple-gray3); }
+
+/* ── Theme Transition Overlay (Circular Expand) ── */
+.theme-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  animation: circleReveal 0.5s var(--ease-premium) forwards;
+}
+
+@keyframes circleReveal {
+  from { clip-path: circle(0% at 50% 50%); }
+  to   { clip-path: circle(150% at 50% 50%); }
+}
+
+/* ── Force Dark (Login stays dark regardless of OS theme) ── */
+.force-dark {
+  --bg:             #2F2F2F;
+  --bg-elevated:    #434343;
+  --surface:        #434343;
+  --border:         transparent;
+  --border-strong:  #555555;
+  --separator:      #555555;
+  --separator-op:   rgba(255,255,255,0.04);
+  --fill:           rgba(255,255,255,0.03);
+  --text:           #F5F5F7;
+  --text2:          #D2D2D7;
+  --text3:          #A1A1A6;
+  --text4:          #86868B;
+  --glass-bg:       #434343;
+  --glass-bg-subtle:#434343;
+  --glass-border:   transparent;
+  --glass-tint:     rgba(255,255,255,0.02);
+  color: var(--text);
+}
+
 /* ── Base ──────────────────────────── */
 html, body {
   margin: 0;

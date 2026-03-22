@@ -66,30 +66,57 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(absolutePath).toString());
   });
 
-  nativeTheme.themeSource = 'dark';
+  // Follow system theme (no forced override)
   
   ipcMain.on('show-notification', (event, { title, body }) => {
     new Notification({ title, body }).show();
   });
 
-  // Send system accent color to renderer
-  ipcMain.handle('get-accent-color', () => {
-    try {
-      return '#' + systemPreferences.getAccentColor().substring(0, 6);
-    } catch { return null; }
+  // Theme detection IPC
+  ipcMain.handle('get-theme', () => {
+    return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
   });
+
+  nativeTheme.on('updated', () => {
+    const theme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+    if (mainWindow) {
+      mainWindow.webContents.send('theme-changed', theme);
+    }
+  });
+
+  // Send system accent color to renderer
+  function getSystemAccentColor() {
+    try {
+      const raw = systemPreferences.getAccentColor();
+      if (raw && raw.length >= 6) return '#' + raw.substring(0, 6);
+      return '#007AFF'; // Apple default blue
+    } catch { return '#007AFF'; }
+  }
+
+  ipcMain.handle('get-accent-color', () => getSystemAccentColor());
 
   createWindow();
 
-  // Listen for accent color changes (macOS)
+  // Listen for accent color changes
+  let lastAccentColor = getSystemAccentColor();
+  function broadcastAccentColor() {
+    if (!mainWindow) return;
+    const color = getSystemAccentColor();
+    if (color !== lastAccentColor) {
+      lastAccentColor = color;
+      mainWindow.webContents.send('accent-color-changed', color);
+    }
+  }
+
   if (process.platform === 'darwin') {
-    systemPreferences.subscribeNotification('AppleColorPreferencesChangedNotification', () => {
-      if (mainWindow) {
-        try {
-          const color = '#' + systemPreferences.getAccentColor().substring(0, 6);
-          mainWindow.webContents.send('accent-color-changed', color);
-        } catch {}
-      }
+    // macOS notification for accent color changes
+    systemPreferences.subscribeNotification('AppleColorPreferencesChangedNotification', broadcastAccentColor);
+    // Polling failsafe every 3s (notification can miss sometimes)
+    setInterval(broadcastAccentColor, 3000);
+  } else if (process.platform === 'win32') {
+    // Windows accent color change event
+    systemPreferences.on('accent-color-changed', (_event, color) => {
+      if (mainWindow) mainWindow.webContents.send('accent-color-changed', '#' + color.substring(0, 6));
     });
   }
 });

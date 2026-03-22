@@ -142,7 +142,7 @@
     height: 120px;
     gap: 12px;
     padding-bottom: 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid var(--separator-op, rgba(255,255,255,0.05));
   }
   .bar-wrapper {
     flex: 1;
@@ -155,18 +155,19 @@
   .bar-flat {
     width: 100%;
     max-width: 60px;
-    background: #3A3A3C;
+    background: var(--accent, #3A3A3C);
+    opacity: 0.7;
     border-radius: 4px 4px 0 0;
-    transition: background 0.3s;
+    transition: background 0.3s, opacity 0.3s;
     animation: growUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
   }
   .bar-wrapper:hover .bar-flat {
-    background: #505052;
+    opacity: 1;
   }
   .bar-label {
     margin-top: 12px;
     font-size: 10px;
-    color: #8E8E93;
+    color: var(--text4, #8E8E93);
     font-weight: 500;
   }
 

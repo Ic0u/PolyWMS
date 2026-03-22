@@ -110,6 +110,9 @@ export const isLoggedIn   = persistentWritable<boolean>('opus_loggedin', false);
 export const currentUser  = persistentWritable<string>('opus_current_user', 'Mai Quốc Tam');
 export const currentRole  = persistentWritable<Role>('opus_current_role', 'admin');
 
+// ── Theme ──
+export const isDarkMode = writable<boolean>(true);
+
 export const ROLE_NAMES: Record<Role, string> = {
   admin:   'Quản trị hệ thống',
   manager: 'Quản lý',

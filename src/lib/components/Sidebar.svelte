@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentRole, currentUser, ROLE_NAMES, isLoggedIn, isSidebarOpen, users } from '$lib/stores';
+  import { currentRole, currentUser, ROLE_NAMES, isLoggedIn, isSidebarOpen, users, isDarkMode } from '$lib/stores';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import { get } from 'svelte/store';
@@ -72,11 +72,11 @@
 <aside class="sidebar" class:mobile-open={$isSidebarOpen} class:desktop-closed={!$isSidebarOpen}>
   <div class="sidebar-top">
     <div class="sidebar-search-container">
-      <Icon name="search" size={14} color="rgba(255,255,255,0.4)" strokeWidth={2.5} />
+      <Icon name="search" size={14} color="var(--sidebar-icon-dim)" strokeWidth={2.5} />
       <input type="text" class="sidebar-search-input" placeholder="Search" bind:value={searchTerm} />
     </div>
     <button class="mobile-close" onclick={() => $isSidebarOpen = false}>
-      <Icon name="x" size={18} color="rgba(255,255,255,0.6)" />
+      <Icon name="x" size={18} color="var(--sidebar-icon-dim)" />
     </button>
   </div>
 
@@ -122,15 +122,25 @@
     width: 250px;
     flex-shrink: 0;
     /* Windows Acrylic / Lighter Vibrancy Sidebar */
-    background: rgba(30, 30, 32, 0.3);
-    backdrop-filter: blur(20px) saturate(150%) brightness(0.95);
-    -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(0.95);
+    background: rgba(30, 30, 32, 0.15);
+    backdrop-filter: blur(12px) saturate(180%) brightness(0.95);
+    -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(0.95);
     border-right: 0.5px solid rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     z-index: 100;
-    transition: margin-left 0.3s var(--spring), transform 0.3s var(--spring);
+    transition: margin-left 0.3s var(--spring), transform 0.3s var(--spring), background 0.4s var(--spring), border-color 0.4s var(--spring);
+    --sidebar-icon-dim: rgba(255,255,255,0.4);
+  }
+
+  /* Light mode sidebar — remove CSS backdrop-filter, let Electron native vibrancy work */
+  :global(html.light) .sidebar {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-right: 0.5px solid rgba(0, 0, 0, 0.1);
+    --sidebar-icon-dim: rgba(0,0,0,0.35);
   }
 
   .sidebar-overlay {
@@ -162,6 +172,11 @@
     width: 100%;
     -webkit-app-region: no-drag;
     box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.08); /* App Store subtle border */
+    transition: background 0.3s var(--spring), box-shadow 0.3s var(--spring);
+  }
+  :global(html.light) .sidebar-search-container {
+    background: rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.08);
   }
 
   .sidebar-search-input {
@@ -176,6 +191,8 @@
   .sidebar-search-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
+  :global(html.light) .sidebar-search-input { color: #1D1D1F; }
+  :global(html.light) .sidebar-search-input::placeholder { color: rgba(0,0,0,0.3); }
 
   .mobile-close {
     display: none;
@@ -208,6 +225,23 @@
     -webkit-app-region: no-drag;
   }
 
+  :global(html.light) .nav-item {
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 400;
+  }
+  :global(html.light) .nav-item:hover {
+    color: #1D1D1F;
+    background: rgba(0, 0, 0, 0.05);
+  }
+  :global(html.light) .nav-item.active {
+    background: rgba(0, 0, 0, 0.1);
+    color: #1D1D1F;
+    font-weight: 600;
+  }
+  :global(html.light) .no-results {
+    color: rgba(0,0,0,0.35);
+  }
+
   .no-results {
     padding: 20px 12px;
     text-align: center;
@@ -227,6 +261,9 @@
   
   .nav-item:hover {
     color: white;
+  }
+  :global(html.light) .nav-item:hover {
+    color: #1D1D1F;
   }
   
   .nav-icon {
@@ -294,6 +331,11 @@
   }
   .user-details { flex: 1; min-width: 0; }
 
+  :global(html.light) .avatar { background: rgba(0,0,0,0.06); box-shadow: 0 0 0 0.5px rgba(0,0,0,0.08); }
+  :global(html.light) .user-name { color: #1D1D1F; }
+  :global(html.light) .user-role { color: rgba(0,0,0,0.4); }
+  :global(html.light) .user-row:hover { background: rgba(0, 0, 0, 0.04); }
+
   @media (min-width: 769px) {
     .sidebar.desktop-closed {
       margin-left: -250px;
@@ -309,6 +351,9 @@
       backdrop-filter: blur(40px) saturate(150%);
       -webkit-backdrop-filter: blur(40px) saturate(150%);
       transform: translateX(-100%);
+    }
+    :global(html.light) .sidebar {
+      background: rgba(255, 255, 255, 0.5);
     }
     .sidebar.mobile-open {
       transform: translateX(0);

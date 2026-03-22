@@ -1,6 +1,6 @@
 <script lang="ts">
   import '$lib/styles/global.css';
-  import { isLoggedIn, currentUser, currentRole, alertMessage, isSidebarOpen } from '$lib/stores';
+  import { isLoggedIn, currentUser, currentRole, alertMessage, isSidebarOpen, isDarkMode } from '$lib/stores';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import Login from '$lib/components/Login.svelte';
@@ -19,14 +19,73 @@
     }
   });
 
+  import { onMount } from 'svelte';
+
   // Sync accent color with OS (macOS/Windows)
-  $effect(() => {
+  onMount(() => {
     if (typeof window !== 'undefined' && (window as any).electronAPI?.getAccentColor) {
+      // Get initial color
       (window as any).electronAPI.getAccentColor().then((color: string | null) => {
         if (color) document.documentElement.style.setProperty('--accent', color);
       });
+      // Listen for hot updates
       (window as any).electronAPI.onAccentColorChanged?.((color: string) => {
-        document.documentElement.style.setProperty('--accent', color);
+        if (color) document.documentElement.style.setProperty('--accent', color);
+      });
+    }
+  });
+
+  // ── System Theme Sync with Circular Expand Animation ──
+  function applyTheme(theme: string) {
+    const dark = theme === 'dark';
+    isDarkMode.set(dark);
+    if (dark) {
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+    }
+  }
+
+  function animateThemeTransition(newTheme: string) {
+    // Capture current screen as overlay (old theme)
+    const overlay = document.createElement('div');
+    overlay.className = 'theme-transition-overlay';
+    // Fill overlay with a solid color matching the OLD background
+    const oldBg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+    overlay.style.background = oldBg;
+    overlay.style.clipPath = 'circle(150% at 50% 50%)';
+    document.body.appendChild(overlay);
+
+    // Apply new theme instantly underneath
+    applyTheme(newTheme);
+
+    // Animate the overlay SHRINKING (inverse: old theme shrinks away to reveal new)
+    requestAnimationFrame(() => {
+      overlay.style.transition = 'clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+      overlay.style.clipPath = 'circle(0% at 50% 50%)';
+    });
+
+    // Remove overlay after animation
+    setTimeout(() => overlay.remove(), 550);
+  }
+
+  // Initial theme detection + live listener
+  $effect(() => {
+    if (typeof window !== 'undefined' && (window as any).electronAPI?.getTheme) {
+      // Get initial theme
+      (window as any).electronAPI.getTheme().then((theme: string) => {
+        applyTheme(theme);
+      });
+      // Listen for OS theme changes
+      (window as any).electronAPI.onThemeChanged?.((theme: string) => {
+        animateThemeTransition(theme);
+      });
+    } else if (typeof window !== 'undefined') {
+      // Fallback: use CSS media query for non-Electron (dev mode)
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(mq.matches ? 'dark' : 'light');
+      mq.addEventListener('change', (e) => {
+        animateThemeTransition(e.matches ? 'dark' : 'light');
       });
     }
   });
@@ -53,14 +112,16 @@
 </script>
 
 {#if !$isLoggedIn}
-  <Login />
+  <div class="force-dark">
+    <Login />
+  </div>
 {:else}
   <!-- Global Windows Drag Region -->
   <div class="global-drag-bar"></div>
 
   <!-- Desktop Global Toggle -->
   <button class="desktop-sidebar-toggle" class:sidebar-closed={!$isSidebarOpen} onclick={() => $isSidebarOpen = !$isSidebarOpen}>
-    <Icon name="sidebar.left" size={16} color="rgba(255,255,255,0.7)" />
+    <Icon name="sidebar.left" size={16} color="var(--text3)" />
   </button>
 
   <div class="app-layout">
@@ -103,6 +164,9 @@
   }
   .desktop-sidebar-toggle:hover {
     background: rgba(255, 255, 255, 0.1);
+  }
+  :global(html.light) .desktop-sidebar-toggle:hover {
+    background: rgba(0, 0, 0, 0.06);
   }
   .desktop-sidebar-toggle.sidebar-closed {
     transform: translateX(-180px); /* Slides left along with sidebar, stopping after traffic lights */
@@ -165,5 +229,10 @@
     .content-area {
       padding: 24px 20px;
     }
+  }
+
+  .force-dark {
+    width: 100%;
+    height: 100vh;
   }
 </style>
