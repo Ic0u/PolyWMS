@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-03-22
+
+### Added
+- **Rebranding:** Renamed application from Opus WMS to Poly WMS.
+- **Refined Login UI:** Redesigned the auth screen with compact UI elements and a floating dashboard card for a premium, macOS-native aesthetic.
+
 ## [1.0.6] - 2026-03-22
 
 ### Added

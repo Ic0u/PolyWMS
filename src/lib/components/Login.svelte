@@ -38,13 +38,18 @@
   <div class="auth-left">
     <!-- Inner layer: rounded blue card -->
     <div class="auth-left-bg">
-      <!-- Image inside the card — white bg disappears via multiply, sculpture tints blue -->
-      <img src="/slash.jpg" alt="App Splash" class="bloom-img" draggable="false" />
+      <!-- Image inside the card -->
+      <img src="/slash.png" alt="App Splash" class="bloom-img" draggable="false" />
     </div>
   </div>
   
   <div class="auth-right">
     <div class="form-panel">
+      <!-- Logo Container -->
+      <div class="logo-container">
+        <img src="/AppLogo.png" alt="PolyWMS Logo" class="app-logo" draggable="false" />
+      </div>
+
       <!-- Elegantly italicized serif title -->
       <h2 class="auth-heading">Bắt đầu sử dụng</h2>
       
@@ -124,39 +129,38 @@
 
   .auth-root {
     display: flex; 
+    flex-direction: row-reverse; /* Đưa form sang trái, ảnh sang phải */
     height: 100vh;
     background: transparent; /* Allows macOS under-window vibrancy to bleed through! */
     overflow: hidden;
   }
 
-  /* Left Panel */
   .auth-left {
-    flex: 1;
+    flex: 1.2; /* Give more dominance to the image side */
     position: relative;
-    display: flex;
-    align-items: center; justify-content: center;
-    padding: 24px;
-    -webkit-app-region: no-drag;
+    padding: 0; /* No padding for full-bleed effect */
+    z-index: 10;
   }
 
-  /* The rounded glass panel — 3D depth, glow, and rich shadows */
   .auth-left-bg {
     width: 100%; height: 100%;
-    border-radius: 40px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow:
-      inset 0 1px 3px rgba(255, 255, 255, 0.4),    /* Brighter inner top highlight */
-      inset 0 -1px 2px rgba(0, 0, 0, 0.3),         /* Lighter inner bottom shadow */
-      0 30px 60px rgba(0, 0, 0, 0.5),              /* Drop shadow */
-      0 0 80px rgba(255, 255, 255, 0.2),           /* Intense primary glow */
-      0 0 160px rgba(200, 230, 255, 0.15);         /* Massive secondary ambient glow (slight icy tint) */
-    overflow: hidden;
+    background: #111;
     position: relative;
-    transform-style: preserve-3d;
-    animation: floatPanel 8s ease-in-out infinite alternate;
+    
+    /* Subtle Micro-Sine Wave on the LEFT edge */
+    -webkit-mask-image: 
+      linear-gradient(black, black), 
+      url("data:image/svg+xml,%3Csvg width='6' height='12' viewBox='0 0 6 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0 L3 0 C3 2, 0 4, 0 6 C0 8, 3 10, 3 12 L6 12 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: calc(100% - 6px) 100%, 6px 12px;
+    -webkit-mask-position: right top, left top;
+    -webkit-mask-repeat: no-repeat, repeat-y;
+
+    mask-image: 
+      linear-gradient(black, black), 
+      url("data:image/svg+xml,%3Csvg width='6' height='12' viewBox='0 0 6 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0 L3 0 C3 2, 0 4, 0 6 C0 8, 3 10, 3 12 L6 12 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: calc(100% - 6px) 100%, 6px 12px;
+    mask-position: right top, left top;
+    mask-repeat: no-repeat, repeat-y;
   }
 
   /* Keyframes for the glass panel floating */
@@ -165,36 +169,27 @@
     100% { transform: translateY(-6px) perspective(1000px) rotateX(1.5deg) rotateY(1deg); }
   }
 
-  /* Inner shadow overlay for dramatic vignetting/depth */
+  /* Subtle gradient overlay to smoothly transition image to the form area on the left */
   .auth-left-bg::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 40px;
-    /* Brighter vignette to let the image shine more while preserving depth */
-    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 20%, rgba(0, 0, 0, 0.25) 150%);
+    background: linear-gradient(to left, transparent 60%, rgba(0,0,0,0.4) 100%);
     pointer-events: none;
     z-index: 2;
   }
 
-  /* Image — Smooth Zoom Loop and Moved Right */
+  /* Image — Static Background */
   .bloom-img {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     object-fit: cover;
-    object-position: 0% 50%; /* Pinned to the left to ensure the mountain is fully visible */
-    filter: brightness(1.05) contrast(1.1) saturate(1.15); /* Balanced brightness */
-    animation: smoothZoom 15s ease-in-out infinite alternate;
-    transform-origin: 30% 50%; /* Zoom centered slightly to the left to focus on the mountain */
+    object-position: 0% center; /* Thêm một chút negative để xích quá đà sang trái luôn */
+    filter: brightness(0.9) contrast(1.05); /* Slightly dimmed for focus on the form */
     z-index: 1;
   }
 
-  /* Pure scale loop animation without translating */
-  @keyframes smoothZoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.15); }
-  }
 
   /* Right Panel: Form Area */
   .auth-right {
@@ -215,20 +210,31 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Typography */
+  /* Typography & Layout */
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px; /* Nhỉnh hơn chút */
+  }
+  .app-logo {
+    width: 56px; /* To hơn xíu */
+    height: auto;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+  }
+
   .auth-heading {
     font-family: var(--font);
-    font-size: 30px;
+    font-size: 26px; /* To hơn xíu */
     color: white; 
-    margin-bottom: 36px; 
+    margin-bottom: 40px; /* Dãn ra xíu */
     text-align: center;
-    font-weight: 600; 
-    letter-spacing: -0.01em;
+    font-weight: 700; 
+    letter-spacing: -0.02em;
   }
 
   /* Glass Inputs matching Mockup */
   .input-stack {
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-direction: column; gap: 16px; /* Dãn gap ra xíu */
   }
   .glass-input {
     display: flex; align-items: center;
@@ -236,7 +242,7 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
-    height: 52px; 
+    height: 48px; /* Cao hơn xíu */
     padding: 0 16px; gap: 12px;
     box-shadow: inset 0 1px 1px rgba(255,255,255,0.06), 0 4px 12px rgba(0,0,0,0.1);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -279,7 +285,7 @@
   /* Primary Action */
   .btn-signin {
     margin-top: 20px;
-    height: 52px; 
+    height: 48px; /* Cao hơn xíu */
     background: white; 
     color: black;
     border: none; border-radius: 12px;
@@ -306,7 +312,7 @@
   
   /* Social Divider */
   .divider {
-    display: flex; align-items: center; margin: 36px 0 24px; gap: 16px;
+    display: flex; align-items: center; margin: 30px 0 20px; gap: 16px;
   }
   .divider::before, .divider::after {
     content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
@@ -318,13 +324,13 @@
   
   /* Social Logins */
   .social-row {
-    display: flex; justify-content: space-between; gap: 16px;
+    display: flex; justify-content: space-between; gap: 14px;
   }
   .social-btn {
-    flex: 1; height: 60px;
+    flex: 1; height: 52px; /* Cao hơn xíu */
     background: rgba(255,255,255,0.04); 
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px; 
+    border-radius: 14px; 
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -337,12 +343,12 @@
   
   /* Footers */
   .signup-row {
-    margin-top: 48px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.5);
+    margin-top: 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.5);
   }
   .signup-row strong { color: white; cursor: pointer; font-weight: 600; }
   
   .terms-row {
-    margin-top: 12px; text-align: center; font-size: 10px; color: rgba(255,255,255,0.3);
+    margin-top: 10px; text-align: center; font-size: 10px; color: rgba(255,255,255,0.3);
     font-style: italic; line-height: 1.5; letter-spacing: 0.02em;
   }
   .terms-row u { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
