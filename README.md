@@ -39,9 +39,9 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
 
 | Role | What they get |
 |------|---------------|
-| 👷 **Staff** | Product lookup, stock-in / stock-out, and task tracking |
-| 📊 **Managers** | Real-time dashboards, reporting with CSV/Excel export, and task assignment |
-| 🔒 **Administrators** | Full user management, audit logs, and role-based access control |
+|**Staff** | Product lookup, stock-in / stock-out, and task tracking |
+|**Managers** | Real-time dashboards, reporting with CSV/Excel export, and task assignment |
+|**Administrators** | Full user management, audit logs, and role-based access control |
 
 ---
 
@@ -50,11 +50,11 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
 <table>
   <tr>
     <td width="50%">
-      <h3>🔐 Role-Based Access Control</h3>
+      <h3>Role-Based Access Control</h3>
       <p>Three distinct roles — <strong>Admin</strong>, <strong>Manager</strong>, <strong>Staff</strong> — with granular route-level guards. Unauthorized navigation is automatically redirected.</p>
     </td>
     <td width="50%">
-      <h3>📦 Inventory Management</h3>
+      <h3>Inventory Management</h3>
       <p>Complete stock-in / stock-out workflows with real-time quantity tracking. Every transaction is timestamped and attributed to the performing user.</p>
     </td>
   </tr>
@@ -68,11 +68,11 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
   </tr>
   <tr>
     <td width="50%">
-      <h3>📊 Reports & Analytics</h3>
+      <h3>Reports & Analytics</h3>
       <p>Interactive bar charts showing import/export trends. Filter by date range, type, or product. Export everything to <strong>CSV</strong> or <strong>Excel (.xlsx)</strong> with one click.</p>
     </td>
     <td width="50%">
-      <h3>✅ Task Assignment</h3>
+      <h3>Task Assignment</h3>
       <p>Managers can assign, prioritize, and track tasks for warehouse staff. Tasks flow through <code>Pending → In Progress → Done</code> with full audit trails.</p>
     </td>
   </tr>
@@ -88,18 +88,18 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
 
 ### More Highlights
 
-- **🏭 Stocktake** — Periodic physical inventory counts with automatic discrepancy detection between recorded and actual stock levels.
+- **Stocktake** — Periodic physical inventory counts with automatic discrepancy detection between recorded and actual stock levels.
 
 <img src="docs/screenshots/stocktake.png" alt="Stocktake" width="600" style="border-radius: 8px; margin: 10px 0;" />
 
-- **📋 Audit Trail** — Dual-purpose logging system capturing both administrative actions and warehouse transactions.
+- **Audit Trail** — Dual-purpose logging system capturing both administrative actions and warehouse transactions.
 
 <img src="docs/screenshots/inventory.png" alt="Audit Trail" width="600" style="border-radius: 8px; margin: 10px 0;" />
 
-- **🔌 Offline Database** — All data persists locally via `localStorage` with a versioned migration system. Zero server setup.
-- **🎨 macOS Tahoe Glass UI** — Frosted liquid glass modals, native vibrancy, and dynamic accent color syncing in real-time.
-- **📊 Low Stock Alerts** — Dashboard highlights items below their minimum reorder threshold.
-- **📱 Barcode Scanner Support** — Hardware barcode scanner integration with automatic input detection.
+- **Offline Database** — All data persists locally via `localStorage` with a versioned migration system. Zero server setup.
+- **macOS Tahoe Glass UI** — Frosted liquid glass modals, native vibrancy, and dynamic accent color syncing in real-time.
+- **Low Stock Alerts** — Dashboard highlights items below their minimum reorder threshold.
+- **Barcode Scanner Support** — Hardware barcode scanner integration with automatic input detection.
 
 ---
 
