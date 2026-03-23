@@ -60,10 +60,10 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
   </tr>
   <tr>
     <td>
-      <img src="docs/screenshots/inventory.png" alt="Inventory Management" width="100%" style="border-radius: 8px;" />
+      <img src="docs/screenshots/roledis.png" alt="Inventory Management" width="100%" style="border-radius: 8px;" />
     </td>
     <td>
-      <img src="docs/screenshots/products.png" alt="Product List" width="100%" style="border-radius: 8px;" />
+      <img src="docs/screenshots/inventory.png" alt="Product List" width="100%" style="border-radius: 8px;" />
     </td>
   </tr>
   <tr>
@@ -89,7 +89,13 @@ Built on **SvelteKit** (Svelte 5 Runes) for blazing-fast reactivity and **Electr
 ### More Highlights
 
 - **🏭 Stocktake** — Periodic physical inventory counts with automatic discrepancy detection between recorded and actual stock levels.
+
+<img src="docs/screenshots/stocktake.png" alt="Stocktake" width="600" style="border-radius: 8px; margin: 10px 0;" />
+
 - **📋 Audit Trail** — Dual-purpose logging system capturing both administrative actions and warehouse transactions.
+
+<img src="docs/screenshots/inventory.png" alt="Audit Trail" width="600" style="border-radius: 8px; margin: 10px 0;" />
+
 - **🔌 Offline Database** — All data persists locally via `localStorage` with a versioned migration system. Zero server setup.
 - **🎨 macOS Tahoe Glass UI** — Frosted liquid glass modals, native vibrancy, and dynamic accent color syncing in real-time.
 - **📊 Low Stock Alerts** — Dashboard highlights items below their minimum reorder threshold.
