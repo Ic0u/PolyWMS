@@ -35,6 +35,7 @@ export interface User {
   name: string;
   role: 'admin' | 'manager' | 'staff';
   active: boolean;
+  password: string;
 }
 
 export interface AuditLog {
@@ -74,14 +75,14 @@ export interface Task {
 }
 
 // ── Store Version (bump this whenever DEFAULT_* data changes) ──
-const STORE_VERSION = '5';
+const STORE_VERSION = '6';
 
 if (browser) {
   const savedVersion = localStorage.getItem('opus_store_version');
   if (savedVersion !== STORE_VERSION) {
     // Clear all persisted store keys so new defaults are used
     ['opus_products','opus_transactions','opus_suppliers','opus_users',
-     'opus_auditlogs','opus_stocktakes','opus_tasks','opus_loggedin','opus_current_user','opus_current_role']
+     'opus_auditlogs','opus_stocktakes','opus_tasks','opus_loggedin','opus_current_user','opus_current_role','opus_categories']
       .forEach(k => localStorage.removeItem(k));
     localStorage.setItem('opus_store_version', STORE_VERSION);
   }
@@ -154,12 +155,12 @@ const DEFAULT_SUPPLIERS: Supplier[] = [
 ];
 
 const DEFAULT_USERS: User[] = [
-  { username: 'tam', name: 'Mai Quốc Tam',      role: 'admin',   active: true },
-  { username: 'trinh',    name: 'Phạm Thùy Trinh',   role: 'manager', active: true },
-  { username: 'an',        name: 'Trần Hải An',        role: 'staff',   active: true },
-  { username: 'bao',      name: 'Trần Vinh Bảo',      role: 'staff',   active: true },
-  { username: 'nam',    name: 'Nguyễn Nam',         role: 'staff',   active: true },
-  { username: 'minh',    name: 'Như Lê Hoàng Minh',  role: 'staff',   active: true },
+  { username: 'tam',   name: 'Mai Quốc Tam',        role: 'admin',   active: true, password: '12345678' },
+  { username: 'trinh', name: 'Phạm Thùy Trinh',     role: 'manager', active: true, password: '12345678' },
+  { username: 'an',    name: 'Trần Hải An',          role: 'staff',   active: true, password: '12345678' },
+  { username: 'bao',   name: 'Trần Vinh Bảo',        role: 'staff',   active: true, password: '12345678' },
+  { username: 'nam',   name: 'Nguyễn Nam',           role: 'staff',   active: true, password: '12345678' },
+  { username: 'minh',  name: 'Như Lê Hoàng Minh',   role: 'staff',   active: true, password: '12345678' },
 ];
 
 const DEFAULT_AUDIT: AuditLog[] = [
@@ -177,6 +178,7 @@ export const suppliers   = persistentWritable<Supplier[]>('opus_suppliers',  DEF
 export const users       = persistentWritable<User[]>('opus_users',          DEFAULT_USERS);
 export const auditLogs   = persistentWritable<AuditLog[]>('opus_auditlogs',  DEFAULT_AUDIT);
 export const stocktakes  = persistentWritable<Stocktake[]>('opus_stocktakes', []);
+export const categories  = persistentWritable<string[]>('opus_categories',   ['Điện tử', 'Điện thoại', 'Phụ kiện']);
 
 const DEFAULT_TASKS: Task[] = [
   { id: 'CV001', title: 'Kiểm kê lô hàng Apple kho A', assignee: 'nam', assignedBy: 'trinh', priority: 'high', status: 'pending', dueDate: '21/03/2026', createdAt: '20/03/2026 09:00', note: 'Ưu tiên iPhone và MacBook' },

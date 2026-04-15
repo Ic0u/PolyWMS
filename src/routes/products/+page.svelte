@@ -1,16 +1,19 @@
 <script lang="ts">
-  import { products, formatCurrency, showAlert, addAuditLog, getProductStatus, type Product } from '$lib/stores';
+  import { products, categories as catStore, formatCurrency, showAlert, addAuditLog, getProductStatus, type Product } from '$lib/stores';
   import Icon from '$lib/components/Icon.svelte';
   import Modal from '$lib/components/Modal.svelte';
 
   let showModal = $state(false);
+  let showCatModal = $state(false);
+  let newCatName = $state('');
+
   let editing = $state(false);
   let searchQuery = $state('');
   let form = $state<Product>({ id: '', name: '', category: 'Điện tử', qty: 0, price: 0, min: 10 });
 
   let selectedCategory = $state('Tất cả');
 
-  let categories = $derived(['Tất cả', ...new Set($products.map(p => p.category))]);
+  let filterCategories = $derived(['Tất cả', ...$catStore]);
 
   let filtered = $derived(
     $products.filter(p => {
@@ -22,7 +25,7 @@
 
   function openAdd() {
     editing = false;
-    form = { id: `SP${String($products.length + 1).padStart(3, '0')}`, name: '', category: 'Điện tử', qty: 0, price: 0, min: 10 };
+    form = { id: `SP${String($products.length + 1).padStart(3, '0')}`, name: '', category: $catStore[0] || '', qty: 0, price: 0, min: 10 };
     showModal = true;
   }
   function openEdit(p: Product) { editing = true; form = { ...p }; showModal = true; }
@@ -57,6 +60,25 @@
       showAlert('Đã xóa sản phẩm');
     }
   }
+
+  function addCategory() {
+    const name = newCatName.trim();
+    if (!name) return;
+    if ($catStore.includes(name)) {
+      showAlert('Danh mục này đã tồn tại', 'error');
+      return;
+    }
+    catStore.update(list => [...list, name]);
+    newCatName = '';
+  }
+
+  function deleteCategory(cat: string) {
+    if ($products.some(p => p.category === cat)) {
+      showAlert('Không thể xóa danh mục đang có sản phẩm', 'error');
+      return;
+    }
+    catStore.update(list => list.filter(c => c !== cat));
+  }
 </script>
 
 <svelte:head><title>Sản phẩm - Poly WMS</title></svelte:head>
@@ -72,10 +94,13 @@
         <input class="search-input" type="text" placeholder="Tìm kiếm sản phẩm..." bind:value={searchQuery} />
       </div>
       <select class="apple-select" bind:value={selectedCategory}>
-        {#each categories as cat}
+        {#each filterCategories as cat}
           <option value={cat}>{cat}</option>
         {/each}
       </select>
+      <button class="icon-btn" onclick={() => showCatModal = true} title="Quản lý danh mục" style="background:var(--bg-card); border:0.5px solid var(--separator-op); width:32px; height:32px">
+        <Icon name="edit" size={14} color="var(--text2)" />
+      </button>
     </div>
     <button class="btn btn-primary btn-sm" onclick={openAdd}>
       <Icon name="plus" size={13} color="white" strokeWidth={2.5}/>
@@ -122,7 +147,9 @@
   <div class="form-group">
     <label for="prod-cat">Danh mục</label>
     <select id="prod-cat" bind:value={form.category}>
-      <option>Điện tử</option><option>Điện thoại</option><option>Phụ kiện</option>
+      {#each $catStore as cat}
+        <option value={cat}>{cat}</option>
+      {/each}
     </select>
   </div>
   <div class="form-grid">
@@ -133,6 +160,26 @@
   <div class="modal-actions">
     <button class="btn btn-secondary" onclick={() => showModal = false}>Huỷ</button>
     <button class="btn btn-primary" onclick={save}>Lưu</button>
+  </div>
+</Modal>
+
+<Modal show={showCatModal} title="Quản lý danh mục" onclose={() => showCatModal = false}>
+  <div class="form-group" style="display:flex; gap:8px">
+    <input bind:value={newCatName} placeholder="Tên danh mục mới..." onkeydown={e => e.key === 'Enter' && addCategory()} />
+    <button class="btn btn-primary" onclick={addCategory} style="width:auto; padding:0 16px">Thêm</button>
+  </div>
+  <div style="max-height: 200px; overflow-y: auto; margin-top: 16px">
+    {#each $catStore as cat}
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 0; border-bottom: 0.5px solid var(--separator-op)">
+        <span style="font-size: 14px">{cat}</span>
+        <button class="icon-btn danger" onclick={() => deleteCategory(cat)}>
+          <Icon name="trash" size={12} color="var(--red)" />
+        </button>
+      </div>
+    {/each}
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-secondary" onclick={() => showCatModal = false}>Đóng</button>
   </div>
 </Modal>
 

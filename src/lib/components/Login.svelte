@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isLoggedIn, currentUser, currentRole, users } from '$lib/stores';
+  import { isLoggedIn, currentUser, currentRole, users, showAlert } from '$lib/stores';
   import { get } from 'svelte/store';
   import { goto } from '$app/navigation';
   import Icon from '$lib/components/Icon.svelte';
@@ -10,23 +10,41 @@
 
   function showComingSoon(feature: string, e?: Event) {
     if (e) e.preventDefault();
-    alert(`Sắp ra mắt: Tính năng ${feature} đang được phát triển.`);
+    showAlert(`Sắp ra mắt: Tính năng ${feature} đang được phát triển.`);
   }
 
   function handleLogin() {
+    const trimUser = username.trim();
+    const trimPass = password.trim();
+
+    if (!trimUser || !trimPass) {
+      showAlert('Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.', 'error');
+      return;
+    }
+
     const userList = get(users);
     const foundUser = userList.find(u => 
-      u.username.toLowerCase() === username.trim().toLowerCase() || 
-      u.name.toLowerCase() === username.trim().toLowerCase()
+      u.username.toLowerCase() === trimUser.toLowerCase() || 
+      u.name.toLowerCase() === trimUser.toLowerCase()
     );
 
-    if (foundUser) {
-      currentUser.set(foundUser.name);
-      currentRole.set(foundUser.role);
-    } else {
-      currentUser.set(username.trim() || 'Test User');
-      currentRole.set('admin');
+    if (!foundUser) {
+      showAlert('Tài khoản không tồn tại.', 'error');
+      return;
     }
+
+    if (!foundUser.active) {
+      showAlert('Tài khoản đã bị vô hiệu hoá. Liên hệ quản trị viên.', 'error');
+      return;
+    }
+
+    if (foundUser.password !== trimPass) {
+      showAlert('Sai mật khẩu. Vui lòng thử lại.', 'error');
+      return;
+    }
+
+    currentUser.set(foundUser.name);
+    currentRole.set(foundUser.role);
     isLoggedIn.set(true);
     goto('/');
   }
@@ -59,7 +77,7 @@
             <path d="M4 7.00005L10.2 11.65C11.2667 12.45 12.7333 12.45 13.8 11.65L20 7" />
             <rect x="3" y="5" width="18" height="14" rx="2" />
           </svg>
-          <input type="text" bind:value={username} placeholder="Email hoặc Tên đăng nhập" />
+          <input type="text" bind:value={username} placeholder="Email hoặc Tên đăng nhập" onkeydown={e => e.key === 'Enter' && handleLogin()} />
         </div>
         
         <!-- Password Input -->
@@ -68,7 +86,7 @@
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <input type={showPassword ? 'text' : 'password'} bind:value={password} placeholder="••••••••••••" />
+          <input type={showPassword ? 'text' : 'password'} bind:value={password} placeholder="••••••••••••" onkeydown={e => e.key === 'Enter' && handleLogin()}/>
           <button type="button" class="icon-action-btn" aria-label="Toggle password visibility" onclick={() => showPassword = !showPassword}>
             {#if showPassword}
               <svg class="icon icon-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -85,7 +103,8 @@
         
 
       </div>
-      
+
+
       <!-- Solid Button -->
       <button class="btn-signin" onclick={handleLogin}>Đăng nhập</button>
       
