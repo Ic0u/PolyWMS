@@ -11,7 +11,11 @@
   let form = $state<{ username:string; name:string; role:'admin'|'manager'|'staff' }>({ username:'', name:'', role:'staff' });
 
   function save() {
-    if (!form.username || !form.name) { showAlert('Vui lòng nhập đầy đủ thông tin', 'error'); return; }
+    form.username = form.username.trim();
+    form.name = form.name.trim();
+    if (!form.username) { showAlert('Vui lòng nhập Username.', 'error'); return; }
+    if (!/^[a-zA-Z0-9_]{3,}$/.test(form.username)) { showAlert('Username phải viết liền không dấu, không khoảng trắng và có ít nhất 3 ký tự.', 'error'); return; }
+    if (!form.name) { showAlert('Vui lòng nhập Họ tên đầy đủ.', 'error'); return; }
     users.update(list => [...list, { ...form, active: true }]);
     addAuditLog(`Thêm người dùng: ${form.name}`);
     showAlert('Đã thêm người dùng');

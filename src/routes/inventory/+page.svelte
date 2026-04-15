@@ -24,9 +24,11 @@
   }
 
   function saveTx() {
-    if (txQty <= 0) { showAlert('Số lượng phải lớn hơn 0', 'error'); return; }
+    if (!txProduct) { showAlert('Vui lòng chọn sản phẩm.', 'error'); return; }
+    if (txQty === null || txQty === undefined || txQty <= 0 || !Number.isInteger(txQty)) { showAlert('Số lượng thay đổi phải là số nguyên (lớn hơn 0).', 'error'); return; }
     const p = $products.find(x => x.name === txProduct);
-    if (txType === 'export' && p && p.qty < txQty) { showAlert('Không đủ hàng trong kho', 'error'); return; }
+    if (!p) { showAlert('Sản phẩm đã chọn không tồn tại trong kho.', 'error'); return; }
+    if (txType === 'export' && p.qty < txQty) { showAlert('Sản phẩm không đủ số lượng trong kho đễ xuất.', 'error'); return; }
     if (p) products.update(list => list.map(x => x.name === txProduct ? { ...x, qty: txType === 'import' ? x.qty + txQty : x.qty - txQty } : x));
     transactions.update(list => [{
       date: new Date().toLocaleString('vi-VN'),

@@ -104,4 +104,19 @@
   :global(html.light) .tahoe-content {
     color: #424245;
   }
+  
+  @media (max-width: 480px) {
+    .modal-tahoe-glass, :global(html.light) .modal-tahoe-glass {
+      border-radius: 18px;
+    }
+    .modal-overlay {
+      padding: 16px;
+    }
+    .tahoe-title {
+      font-size: 15px; margin: 20px 16px 12px;
+    }
+    .tahoe-content {
+      padding: 0 16px 20px;
+    }
+  }
 </style>

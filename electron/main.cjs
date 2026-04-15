@@ -1,4 +1,4 @@
-const { app, BrowserWindow, nativeTheme, Notification, ipcMain, systemPreferences, protocol, net } = require('electron');
+const { app, BrowserWindow, nativeTheme, Notification, ipcMain, dialog, systemPreferences, protocol, net } = require('electron');
 
 const path = require('path');
 const fs = require('fs');
@@ -70,6 +70,17 @@ app.whenReady().then(() => {
   
   ipcMain.on('show-notification', (event, { title, body }) => {
     new Notification({ title, body }).show();
+  });
+
+  // Native OS dialog (blocks UI - user must click OK)
+  ipcMain.handle('show-dialog', async (event, { type, title, message }) => {
+    await dialog.showMessageBox(mainWindow, {
+      type: type || 'error',   // 'error' | 'warning' | 'info'
+      title: title || 'Thông báo',
+      message,
+      buttons: ['OK'],
+      defaultId: 0,
+    });
   });
 
   // Theme detection IPC

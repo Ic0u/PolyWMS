@@ -27,7 +27,14 @@
   }
   function openEdit(p: Product) { editing = true; form = { ...p }; showModal = true; }
   function save() {
-    if (!form.name) { showAlert('Vui lòng nhập tên sản phẩm', 'error'); return; }
+    form.id = form.id.trim();
+    form.name = form.name.trim();
+    if (!form.id) { showAlert('Vui lòng nhập mã sản phẩm.', 'error'); return; }
+    if (!form.name) { showAlert('Vui lòng nhập tên sản phẩm.', 'error'); return; }
+    if (form.qty === null || form.qty === undefined || form.qty < 0) { showAlert('Số lượng phải là số lớn hơn hoặc bằng 0.', 'error'); return; }
+    if (form.price === null || form.price === undefined || form.price < 0) { showAlert('Đơn giá phải là số lớn hơn hoặc bằng 0.', 'error'); return; }
+    if (form.min === null || form.min === undefined || form.min < 1) { showAlert('Tồn tối thiểu phải là số lớn hơn hoặc bằng 1.', 'error'); return; }
+
     if (!editing && $products.some(p => p.id === form.id)) {
       showAlert('Thất bại: Mã sản phẩm đã tồn tại!', 'error');
       return;

@@ -82,7 +82,7 @@
 
   <nav class="nav">
     {#each filteredItems as item}
-      <a class="nav-item" class:active={path === item.href} href={item.href}>
+      <a class="nav-item" class:active={path === item.href} href={item.href} onclick={() => { if (window.innerWidth <= 768) $isSidebarOpen = false; }}>
         <span class="nav-icon">
           <Icon name={item.icon} size={16} color="currentColor" strokeWidth={1.5} />
         </span>
@@ -132,6 +132,7 @@
     z-index: 100;
     transition: margin-left 0.3s var(--spring), transform 0.3s var(--spring), background 0.4s var(--spring), border-color 0.4s var(--spring);
     --sidebar-icon-dim: rgba(255,255,255,0.4);
+    -webkit-app-region: drag; /* Cho phép kéo thả ở vùng trống của Sidebar */
   }
 
   /* Light mode sidebar — remove CSS backdrop-filter, let Electron native vibrancy work */

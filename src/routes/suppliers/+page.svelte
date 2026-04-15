@@ -14,7 +14,19 @@
   }
   function openEdit(s: Supplier) { editing=true; form={...s}; showModal=true; }
   function save() {
-    if (!form.name) { showAlert('Vui lòng nhập tên nhà cung cấp', 'error'); return; }
+    if (!form.name.trim()) { showAlert('Vui lòng nhập tên nhà cung cấp.', 'error'); return; }
+    
+    if (!form.phone.trim() || !/^[0-9+\- ]{8,15}$/.test(form.phone.trim())) {
+      showAlert('Vui lòng nhập số điện thoại hợp lệ (8-15 số).', 'error');
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim() || !emailPattern.test(form.email.trim())) {
+      showAlert('Vui lòng nhập địa chỉ email hợp lệ.', 'error');
+      return;
+    }
+
     if (editing) {
       suppliers.update(list => list.map(s => s.id===form.id ? {...form} : s));
       addAuditLog(`Cập nhật NCC: ${form.name}`);

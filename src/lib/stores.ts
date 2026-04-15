@@ -205,6 +205,10 @@ export function getProductStatus(p: { qty: number; min: number }) {
 export const alertMessage = writable<{ text: string; type: 'success' | 'error' } | null>(null);
 let alertTimer: ReturnType<typeof setTimeout>;
 export function showAlert(text: string, type: 'success' | 'error' = 'success') {
+  if (type === 'error' && typeof window !== 'undefined' && (window as any).electronAPI?.showDialog) {
+    (window as any).electronAPI.showDialog({ type: 'error', title: 'Thông báo lỗi', message: text });
+    return;
+  }
   clearTimeout(alertTimer);
   alertMessage.set({ text, type });
   alertTimer = setTimeout(() => alertMessage.set(null), 2500);

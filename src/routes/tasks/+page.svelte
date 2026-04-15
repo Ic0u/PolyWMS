@@ -35,8 +35,10 @@
   }
 
   function save() {
-    if (!form.title.trim()) { showAlert('Vui lòng nhập tên công việc', 'error'); return; }
-    if (!form.assignee) { showAlert('Vui lòng chọn nhân viên', 'error'); return; }
+    form.title = form.title.trim();
+    if (!form.title) { showAlert('Vui lòng nhập tên công việc.', 'error'); return; }
+    if (!form.assignee) { showAlert('Vui lòng chọn nhân sự đảm nhận.', 'error'); return; }
+    if (form.dueDate && !/^\d{2}\/\d{2}\/\d{4}$/.test(form.dueDate.trim())) { showAlert('Hạn hoàn thành (nếu có) phải theo định dạng DD/MM/YYYY.', 'error'); return; }
     const now = new Date();
     const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
     const newTask: Task = {

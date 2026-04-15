@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
   isElectron: true,
   showNotification: (payload) => ipcRenderer.send('show-notification', payload),
+  showDialog: (payload) => ipcRenderer.invoke('show-dialog', payload),
   getAccentColor: () => ipcRenderer.invoke('get-accent-color'),
   onAccentColorChanged: (callback) => ipcRenderer.on('accent-color-changed', (_event, color) => callback(color)),
   getTheme: () => ipcRenderer.invoke('get-theme'),

@@ -33,7 +33,6 @@
 </script>
 
 <div class="auth-root">
-  <div class="window-drag-region"></div>
   
   <div class="auth-left">
     <!-- Inner layer: rounded blue card -->
@@ -51,7 +50,7 @@
       </div>
 
       <!-- Elegantly italicized serif title -->
-      <h2 class="auth-heading">Bắt đầu sử dụng</h2>
+      <h2 class="auth-heading">Đăng Nhập</h2>
       
       <div class="input-stack">
         <!-- Email Input -->
@@ -103,13 +102,13 @@
         <button class="social-btn" onclick={() => showComingSoon('Đăng nhập Google')}>
           <Icon name="google" size={18} />
         </button>
-        <!-- Meta -->
-        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập Meta')}>
-          <Icon name="meta" size={22} />
+        <!-- Apple -->
+        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập Apple')}>
+          <Icon name="apple" size={18} />
         </button>  
-        <!-- Twitter -->
-        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập X')}>
-          <Icon name="twitter" size={18} />
+        <!-- Facebook -->
+        <button class="social-btn" onclick={() => showComingSoon('Đăng nhập Facebook')}>
+          <Icon name="facebook" size={18} />
         </button>
       </div>
       
@@ -133,10 +132,11 @@
     height: 100vh;
     background: transparent; /* Allows macOS under-window vibrancy to bleed through! */
     overflow: hidden;
+    -webkit-app-region: drag; /* Toàn bộ background ảnh thành vùng kéo thả */
   }
 
   .auth-left {
-    flex: 1.2; /* Give more dominance to the image side */
+    flex: 1; /* Chia đôi 50/50 với form */
     position: relative;
     padding: 0; /* No padding for full-bleed effect */
     z-index: 10;
@@ -193,11 +193,13 @@
 
   /* Right Panel: Form Area */
   .auth-right {
-    flex: 1; 
-    min-width: 400px; /* Ensures the form has enough breathing room */
-    display: flex; 
-    align-items: center; justify-content: center;
-    -webkit-app-region: no-drag;
+    flex: 1; /* Chia đôi 50/50 với hình ảnh */
+    min-width: 400px; 
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    position: relative;
+    z-index: 2;
+    -webkit-app-region: no-drag; /* Form đăng nhập không bị ảnh hưởng */
   }
   .form-panel {
     width: 320px;
@@ -356,7 +358,25 @@
 
   @media (max-width: 960px) {
     .auth-left { display: none; }
-    .auth-right { min-width: 100%; }
-    .auth-root { background: rgba(0,0,0,0.3); } /* Dim the background if there's no left visual */
+    .auth-right { 
+      min-width: 100%; 
+      max-width: 100%; 
+      background: rgba(0,0,0,0.6); 
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+    }
+    .auth-root { 
+      background: url('/slash.png') center/cover no-repeat; 
+    }
+  }
+
+  @media (max-width: 480px) {
+    .form-panel {
+      width: 100%;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+    .auth-heading { font-size: 22px; margin-bottom: 24px; }
+    .app-logo { width: 48px; }
   }
 </style>
