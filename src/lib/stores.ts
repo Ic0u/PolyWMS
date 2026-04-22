@@ -202,18 +202,34 @@ export function getProductStatus(p: { qty: number; min: number }) {
   if (p.qty < p.min * 2) return { cls: 'badge-orange', text: 'Thấp'     };
   return                        { cls: 'badge-green',  text: 'Đủ hàng'  };
 }
-
-// ── Toast Alert ──────────────────────────────
+// ── Native Alert ─────────────────────────────
 export const alertMessage = writable<{ text: string; type: 'success' | 'error' } | null>(null);
-let alertTimer: ReturnType<typeof setTimeout>;
+
 export function showAlert(text: string, type: 'success' | 'error' = 'success') {
-  if (type === 'error' && typeof window !== 'undefined' && (window as any).electronAPI?.showDialog) {
-    (window as any).electronAPI.showDialog({ type: 'error', title: 'Thông báo lỗi', message: text });
+  if (typeof window === 'undefined') return;
+
+  // Electron: native dialog
+  if ((window as any).electronAPI?.showDialog) {
+    (window as any).electronAPI.showDialog({ 
+      type: type === 'error' ? 'error' : 'info', 
+      title: type === 'error' ? 'Lỗi' : 'Thông báo', 
+      message: text 
+    });
     return;
   }
-  clearTimeout(alertTimer);
-  alertMessage.set({ text, type });
-  alertTimer = setTimeout(() => alertMessage.set(null), 2500);
+
+  // Web: browser Notification API
+  if ('Notification' in window) {
+    if (Notification.permission === 'granted') {
+      new Notification(type === 'error' ? '❌ Lỗi' : '✅ Thành công', { body: text, icon: '/favicon.png' });
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(perm => {
+        if (perm === 'granted') {
+          new Notification(type === 'error' ? '❌ Lỗi' : '✅ Thành công', { body: text, icon: '/favicon.png' });
+        }
+      });
+    }
+  }
 }
 
 // ── Audit Logger ─────────────────────────────
