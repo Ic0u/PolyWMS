@@ -221,11 +221,11 @@ export function showAlert(text: string, type: 'success' | 'error' = 'success') {
   // Web: browser Notification API
   if ('Notification' in window) {
     if (Notification.permission === 'granted') {
-      new Notification(type === 'error' ? '❌ Lỗi' : '✅ Thành công', { body: text, icon: '/favicon.png' });
+      new Notification(type === 'error' ? 'Lỗi' : 'Thông báo', { body: text, icon: '/favicon.png' });
     } else if (Notification.permission !== 'denied') {
       Notification.requestPermission().then(perm => {
         if (perm === 'granted') {
-          new Notification(type === 'error' ? '❌ Lỗi' : '✅ Thành công', { body: text, icon: '/favicon.png' });
+          new Notification(type === 'error' ? 'Lỗi' : 'Thông báo', { body: text, icon: '/favicon.png' });
         }
       });
     }
