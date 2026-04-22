@@ -4,6 +4,7 @@
     transactions,
     suppliers,
     categories as catStore,
+    currentRole,
     formatCurrency,
     showAlert,
     addAuditLog,
@@ -46,6 +47,9 @@
   });
 
   let selectedCategory = $state("Tất cả");
+  let canEdit = $derived(
+    $currentRole === "manager" || $currentRole === "admin",
+  );
 
   let filterCategories = $derived(["Tất cả", ...$catStore]);
 
@@ -198,19 +202,23 @@
           <option value={cat}>{cat}</option>
         {/each}
       </select>
-      <button
-        class="icon-btn"
-        onclick={() => (showCatModal = true)}
-        title="Quản lý danh mục"
-        style="background:var(--bg-card); border:0.5px solid var(--separator-op); width:32px; height:32px"
-      >
-        <Icon name="edit" size={14} color="var(--text2)" />
-      </button>
+      {#if canEdit}
+        <button
+          class="icon-btn"
+          onclick={() => (showCatModal = true)}
+          title="Quản lý danh mục"
+          style="background:var(--bg-card); border:0.5px solid var(--separator-op); width:32px; height:32px"
+        >
+          <Icon name="edit" size={14} color="var(--text2)" />
+        </button>
+      {/if}
     </div>
-    <button class="btn btn-primary btn-sm" onclick={openAdd}>
-      <Icon name="plus" size={13} color="white" strokeWidth={2.5} />
-      Thêm sản phẩm
-    </button>
+    {#if canEdit}
+      <button class="btn btn-primary btn-sm" onclick={openAdd}>
+        <Icon name="plus" size={13} color="white" strokeWidth={2.5} />
+        Thêm sản phẩm
+      </button>
+    {/if}
   </div>
 
   <div class="table-card">
@@ -248,30 +256,32 @@
                     strokeWidth={2}
                   />
                 </button>
-                <button
-                  class="icon-btn"
-                  onclick={() => openEdit(p)}
-                  title="Sửa"
-                >
-                  <Icon
-                    name="edit"
-                    size={14}
-                    color="var(--accent)"
-                    strokeWidth={2}
-                  />
-                </button>
-                <button
-                  class="icon-btn danger"
-                  onclick={() => remove(p)}
-                  title="Xóa"
-                >
-                  <Icon
-                    name="trash"
-                    size={14}
-                    color="var(--red)"
-                    strokeWidth={2}
-                  />
-                </button>
+                {#if canEdit}
+                  <button
+                    class="icon-btn"
+                    onclick={() => openEdit(p)}
+                    title="Sửa"
+                  >
+                    <Icon
+                      name="edit"
+                      size={14}
+                      color="var(--accent)"
+                      strokeWidth={2}
+                    />
+                  </button>
+                  <button
+                    class="icon-btn danger"
+                    onclick={() => remove(p)}
+                    title="Xóa"
+                  >
+                    <Icon
+                      name="trash"
+                      size={14}
+                      color="var(--red)"
+                      strokeWidth={2}
+                    />
+                  </button>
+                {/if}
               </div>
             </td>
           </tr>
