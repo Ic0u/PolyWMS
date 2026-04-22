@@ -111,7 +111,9 @@
     if (confirm(`Đặt lại mật khẩu cho "${u.name}" về ${DEFAULT_PASSWORD}?`)) {
       users.update((list) =>
         list.map((x) =>
-          x.username === u.username ? { ...x, password: DEFAULT_PASSWORD } : x,
+          x.username === u.username
+            ? { ...x, password: DEFAULT_PASSWORD, mustChangePassword: true }
+            : x,
         ),
       );
       addAuditLog(`Reset mật khẩu: ${u.name}`);

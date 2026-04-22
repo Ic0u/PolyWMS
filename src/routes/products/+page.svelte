@@ -1,6 +1,8 @@
 <script lang="ts">
   import {
     products,
+    transactions,
+    suppliers,
     categories as catStore,
     formatCurrency,
     showAlert,
@@ -14,6 +16,25 @@
   let showModal = $state(false);
   let showCatModal = $state(false);
   let newCatName = $state("");
+  let showDetailModal = $state(false);
+  let detailProduct = $state<Product | null>(null);
+
+  // RQ18: Get last import date for a product
+  function getLastImport(productName: string): string {
+    const imports = $transactions.filter(
+      (t) => t.type === "import" && t.product === productName,
+    );
+    return imports.length > 0 ? imports[0].date : "Chưa có";
+  }
+
+  // RQ18: Get supplier for a product (match by name)
+  function getSupplier(productName: string) {
+    return (
+      $suppliers.find((s) =>
+        productName.toLowerCase().includes(s.name.split(" ")[0].toLowerCase()),
+      ) || null
+    );
+  }
 
   let editing = $state(false);
   let searchQuery = $state("");
@@ -215,6 +236,21 @@
               <div class="action-btns">
                 <button
                   class="icon-btn"
+                  onclick={() => {
+                    detailProduct = p;
+                    showDetailModal = true;
+                  }}
+                  title="Xem chi tiết"
+                >
+                  <Icon
+                    name="search"
+                    size={14}
+                    color="var(--text2)"
+                    strokeWidth={2}
+                  />
+                </button>
+                <button
+                  class="icon-btn"
                   onclick={() => openEdit(p)}
                   title="Sửa"
                 >
@@ -377,7 +413,94 @@
   </div>
 </Modal>
 
+<!-- RQ18: Product Detail Modal -->
+<Modal
+  show={showDetailModal}
+  title="Chi tiết sản phẩm"
+  onclose={() => (showDetailModal = false)}
+>
+  {#if detailProduct}
+    {@const st = getProductStatus(detailProduct)}
+    {@const supplier = getSupplier(detailProduct.name)}
+    <div class="detail-grid">
+      <div class="detail-row">
+        <span class="detail-label">Mã SP</span><span class="mono"
+          >{detailProduct.id}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Tên sản phẩm</span><span
+          style="font-weight:500">{detailProduct.name}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Danh mục</span><span
+          >{detailProduct.category}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Số lượng tồn</span><span class="mono"
+          >{detailProduct.qty}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Đơn giá</span><span class="mono"
+          >{formatCurrency(detailProduct.price)}₫</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Tồn tối thiểu</span><span class="mono"
+          >{detailProduct.min}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Trạng thái</span><span class="badge {st.cls}"
+          >{st.text}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Nhà cung cấp</span><span
+          >{supplier ? supplier.name : "Chưa liên kết"}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">SĐT NCC</span><span
+          >{supplier ? supplier.phone : "—"}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Ngày nhập gần nhất</span><span
+          >{getLastImport(detailProduct.name)}</span
+        >
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button
+        class="btn btn-secondary"
+        onclick={() => (showDetailModal = false)}>Đóng</button
+      >
+    </div>
+  {/if}
+</Modal>
+
 <style>
+  .detail-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--separator-op);
+  }
+  .detail-label {
+    color: var(--text2);
+    font-size: 13px;
+  }
+
   .apple-select {
     width: 140px;
     font-size: 13px;

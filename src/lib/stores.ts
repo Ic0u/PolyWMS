@@ -36,6 +36,7 @@ export interface User {
   role: 'admin' | 'manager' | 'staff';
   active: boolean;
   password: string;
+  mustChangePassword?: boolean;
 }
 
 export interface AuditLog {
