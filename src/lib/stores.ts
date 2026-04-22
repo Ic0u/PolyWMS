@@ -9,6 +9,7 @@ export interface Product {
   qty: number;
   price: number;
   min: number;
+  supplierId?: string;
 }
 
 export interface Transaction {
@@ -76,7 +77,7 @@ export interface Task {
 }
 
 // ── Store Version (bump this whenever DEFAULT_* data changes) ──
-const STORE_VERSION = '6';
+const STORE_VERSION = '7';
 
 if (browser) {
   const savedVersion = localStorage.getItem('opus_store_version');
@@ -130,14 +131,14 @@ export const isSidebarOpen = writable<boolean>(true);
 
 // ── Seed Data ────────────────────────────────
 const DEFAULT_PRODUCTS: Product[] = [
-  { id: 'SP001', name: 'Laptop Dell XPS 15',    category: 'Điện tử',   qty: 45,  price: 28000000, min: 10 },
-  { id: 'SP002', name: 'iPhone 15 Pro Max',      category: 'Điện thoại', qty: 120, price: 34000000, min: 20 },
-  { id: 'SP003', name: 'Samsung Galaxy S24',     category: 'Điện thoại', qty: 8,   price: 26000000, min: 15 },
-  { id: 'SP004', name: 'AirPods Pro 2',          category: 'Phụ kiện',  qty: 200, price: 6500000,  min: 30 },
-  { id: 'SP005', name: 'MacBook Air M3',         category: 'Điện tử',   qty: 32,  price: 32000000, min: 10 },
-  { id: 'SP006', name: 'Bàn phím Logitech MX',  category: 'Phụ kiện',  qty: 5,   price: 2800000,  min: 20 },
+  { id: 'SP001', name: 'Laptop Dell XPS 15',    category: 'Điện tử',   qty: 45,  price: 28000000, min: 10, supplierId: 'NCC01' },
+  { id: 'SP002', name: 'iPhone 15 Pro Max',      category: 'Điện thoại', qty: 120, price: 34000000, min: 20, supplierId: 'NCC01' },
+  { id: 'SP003', name: 'Samsung Galaxy S24',     category: 'Điện thoại', qty: 8,   price: 26000000, min: 15, supplierId: 'NCC02' },
+  { id: 'SP004', name: 'AirPods Pro 2',          category: 'Phụ kiện',  qty: 200, price: 6500000,  min: 30, supplierId: 'NCC01' },
+  { id: 'SP005', name: 'MacBook Air M3',         category: 'Điện tử',   qty: 32,  price: 32000000, min: 10, supplierId: 'NCC01' },
+  { id: 'SP006', name: 'Bàn phím Logitech MX',  category: 'Phụ kiện',  qty: 5,   price: 2800000,  min: 20, supplierId: 'NCC03' },
   { id: 'SP007', name: 'Màn hình LG 27"',       category: 'Điện tử',   qty: 18,  price: 8500000,  min: 5  },
-  { id: 'SP008', name: 'Chuột Magic Mouse',     category: 'Phụ kiện',  qty: 3,   price: 2200000,  min: 15 },
+  { id: 'SP008', name: 'Chuột Magic Mouse',     category: 'Phụ kiện',  qty: 3,   price: 2200000,  min: 15, supplierId: 'NCC01' },
 ];
 
 const DEFAULT_TRANSACTIONS: Transaction[] = [

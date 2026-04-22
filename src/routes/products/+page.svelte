@@ -27,13 +27,10 @@
     return imports.length > 0 ? imports[0].date : "Chưa có";
   }
 
-  // RQ18: Get supplier for a product (match by name)
-  function getSupplier(productName: string) {
-    return (
-      $suppliers.find((s) =>
-        productName.toLowerCase().includes(s.name.split(" ")[0].toLowerCase()),
-      ) || null
-    );
+  // RQ18: Get supplier for a product by supplierId
+  function getSupplier(p: Product) {
+    if (!p.supplierId) return null;
+    return $suppliers.find((s) => s.id === p.supplierId) || null;
   }
 
   let editing = $state(false);
@@ -45,6 +42,7 @@
     qty: 0,
     price: 0,
     min: 10,
+    supplierId: "",
   });
 
   let selectedCategory = $state("Tất cả");
@@ -72,6 +70,7 @@
       qty: 0,
       price: 0,
       min: 10,
+      supplierId: "",
     };
     showModal = true;
   }
@@ -336,6 +335,15 @@
       />
     </div>
   </div>
+  <div class="form-group">
+    <label for="prod-supplier">Nhà cung cấp</label>
+    <select id="prod-supplier" bind:value={form.supplierId}>
+      <option value="">-- Chọn NCC --</option>
+      {#each $suppliers as s}
+        <option value={s.id}>{s.name} ({s.phone})</option>
+      {/each}
+    </select>
+  </div>
   <div class="modal-actions">
     <button class="btn btn-secondary" onclick={() => (showModal = false)}
       >Huỷ</button
@@ -421,7 +429,7 @@
 >
   {#if detailProduct}
     {@const st = getProductStatus(detailProduct)}
-    {@const supplier = getSupplier(detailProduct.name)}
+    {@const supplier = getSupplier(detailProduct)}
     <div class="detail-grid">
       <div class="detail-row">
         <span class="detail-label">Mã SP</span><span class="mono"
