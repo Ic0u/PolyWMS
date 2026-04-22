@@ -1,57 +1,68 @@
 <script lang="ts">
-  import { currentRole, currentUser, ROLE_NAMES, isLoggedIn, isSidebarOpen, users, isDarkMode } from '$lib/stores';
-  import { page } from '$app/state';
-  import { goto } from '$app/navigation';
-  import { get } from 'svelte/store';
-  import Icon from '$lib/components/Icon.svelte';
+  import {
+    currentRole,
+    currentUser,
+    ROLE_NAMES,
+    isLoggedIn,
+    isSidebarOpen,
+    users,
+    isDarkMode,
+  } from "$lib/stores";
+  import { page } from "$app/state";
+  import { goto } from "$app/navigation";
+  import { get } from "svelte/store";
+  import Icon from "$lib/components/Icon.svelte";
 
   let path = $derived(page.url.pathname);
 
-  const NAV: Record<string, { href: string; icon: string; label: string; }[]> = {
+  const NAV: Record<string, { href: string; icon: string; label: string }[]> = {
     staff: [
-      { href: '/', icon: 'dashboard', label: 'Dashboard' },
-      { href: '/products', icon: 'products', label: 'Sản phẩm' },
-      { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' },
-      { href: '/tasks', icon: 'tasks', label: 'Công việc' }
+      { href: "/", icon: "dashboard", label: "Dashboard" },
+      { href: "/products", icon: "products", label: "Sản phẩm" },
+      { href: "/inventory", icon: "inventory", label: "Nhập/Xuất kho" },
+      { href: "/tasks", icon: "tasks", label: "Công việc" },
     ],
     manager: [
-      { href: '/', icon: 'dashboard', label: 'Dashboard' },
-      { href: '/products', icon: 'products', label: 'Sản phẩm' },
-      { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' },
-      { href: '/tasks', icon: 'tasks', label: 'Công việc' },
-      { href: '/reports', icon: 'reports', label: 'Báo cáo' },
-      { href: '/suppliers', icon: 'suppliers', label: 'Nhà cung cấp' },
-      { href: '/stocktake', icon: 'stocktake', label: 'Kiểm kê' },
-      { href: '/audit', icon: 'audit', label: 'Nhật ký' }
+      { href: "/", icon: "dashboard", label: "Dashboard" },
+      { href: "/products", icon: "products", label: "Sản phẩm" },
+      { href: "/inventory", icon: "inventory", label: "Nhập/Xuất kho" },
+      { href: "/tasks", icon: "tasks", label: "Công việc" },
+      { href: "/reports", icon: "reports", label: "Báo cáo" },
+      { href: "/suppliers", icon: "suppliers", label: "Nhà cung cấp" },
+      { href: "/stocktake", icon: "stocktake", label: "Kiểm kê" },
+      { href: "/audit", icon: "audit", label: "Nhật ký" },
     ],
     admin: [
-      { href: '/', icon: 'dashboard', label: 'Dashboard' },
-      { href: '/products', icon: 'products', label: 'Sản phẩm' },
-      { href: '/inventory', icon: 'inventory', label: 'Nhập/Xuất kho' },
-      { href: '/tasks', icon: 'tasks', label: 'Công việc' },
-      { href: '/reports', icon: 'reports', label: 'Báo cáo' },
-      { href: '/suppliers', icon: 'suppliers', label: 'Nhà cung cấp' },
-      { href: '/stocktake', icon: 'stocktake', label: 'Kiểm kê' },
-      { href: '/audit', icon: 'audit', label: 'Nhật ký' },
-      { href: '/users', icon: 'users', label: 'Người dùng' }
-    ]
+      { href: "/", icon: "dashboard", label: "Dashboard" },
+      { href: "/products", icon: "products", label: "Sản phẩm" },
+      { href: "/inventory", icon: "inventory", label: "Nhập/Xuất kho" },
+      { href: "/tasks", icon: "tasks", label: "Công việc" },
+      { href: "/reports", icon: "reports", label: "Báo cáo" },
+      { href: "/suppliers", icon: "suppliers", label: "Nhà cung cấp" },
+      { href: "/stocktake", icon: "stocktake", label: "Kiểm kê" },
+      { href: "/audit", icon: "audit", label: "Nhật ký" },
+      { href: "/users", icon: "users", label: "Người dùng" },
+      { href: "/settings", icon: "settings", label: "Cài đặt" },
+    ],
   };
 
   let items = $derived(NAV[$currentRole] ?? NAV.staff);
-  
-  let searchTerm = $state('');
-  
+
+  let searchTerm = $state("");
+
   let filteredItems = $derived(
-    searchTerm.trim() === ''
+    searchTerm.trim() === ""
       ? items
-      : items.filter(item => item.label.toLowerCase().includes(searchTerm.toLowerCase()))
+      : items.filter((item) =>
+          item.label.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
   );
 
   // Resolve avatar path from username (e.g., "nam" → "/nam.jpg")
   // Falls back to icon on error via onerror handler
   let avatarSrc = $derived(() => {
     const userList = get(users);
-    const found = userList.find(u => u.name === $currentUser);
+    const found = userList.find((u) => u.name === $currentUser);
     return found ? `/${found.username}.jpg` : null;
   });
 
@@ -66,25 +77,51 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 {#if $isSidebarOpen}
-  <div class="sidebar-overlay" onclick={() => $isSidebarOpen = false}></div>
+  <div class="sidebar-overlay" onclick={() => ($isSidebarOpen = false)}></div>
 {/if}
 
-<aside class="sidebar" class:mobile-open={$isSidebarOpen} class:desktop-closed={!$isSidebarOpen}>
+<aside
+  class="sidebar"
+  class:mobile-open={$isSidebarOpen}
+  class:desktop-closed={!$isSidebarOpen}
+>
   <div class="sidebar-top">
     <div class="sidebar-search-container">
-      <Icon name="search" size={14} color="var(--sidebar-icon-dim)" strokeWidth={2.5} />
-      <input type="text" class="sidebar-search-input" placeholder="Search" bind:value={searchTerm} />
+      <Icon
+        name="search"
+        size={14}
+        color="var(--sidebar-icon-dim)"
+        strokeWidth={2.5}
+      />
+      <input
+        type="text"
+        class="sidebar-search-input"
+        placeholder="Search"
+        bind:value={searchTerm}
+      />
     </div>
-    <button class="mobile-close" onclick={() => $isSidebarOpen = false}>
+    <button class="mobile-close" onclick={() => ($isSidebarOpen = false)}>
       <Icon name="x" size={18} color="var(--sidebar-icon-dim)" />
     </button>
   </div>
 
   <nav class="nav">
     {#each filteredItems as item}
-      <a class="nav-item" class:active={path === item.href} href={item.href} onclick={() => { if (window.innerWidth <= 768) $isSidebarOpen = false; }}>
+      <a
+        class="nav-item"
+        class:active={path === item.href}
+        href={item.href}
+        onclick={() => {
+          if (window.innerWidth <= 768) $isSidebarOpen = false;
+        }}
+      >
         <span class="nav-icon">
-          <Icon name={item.icon} size={16} color="currentColor" strokeWidth={1.5} />
+          <Icon
+            name={item.icon}
+            size={16}
+            color="currentColor"
+            strokeWidth={1.5}
+          />
         </span>
         <span class="nav-label">{item.label}</span>
       </a>
@@ -94,7 +131,15 @@
   </nav>
 
   <div class="sidebar-bottom">
-    <button class="user-row" onclick={() => { if(window.confirm('Bạn có chắc chắn muốn đăng xuất?')) { isLoggedIn.set(false); goto('/'); } }}>
+    <button
+      class="user-row"
+      onclick={() => {
+        if (window.confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+          isLoggedIn.set(false);
+          goto("/");
+        }
+      }}
+    >
       <div class="user-info-wrapper">
         <div class="avatar avatar-container">
           {#if !imgError && avatarSrc()}
@@ -102,10 +147,15 @@
               src={avatarSrc()}
               alt={$currentUser}
               class="avatar-img"
-              onerror={() => imgError = true}
+              onerror={() => (imgError = true)}
             />
           {:else}
-            <Icon name="default-avatar" size={36} color="#8E8E93" strokeWidth={0} />
+            <Icon
+              name="default-avatar"
+              size={36}
+              color="#8E8E93"
+              strokeWidth={0}
+            />
           {/if}
         </div>
         <div class="user-details">
@@ -130,8 +180,12 @@
     flex-direction: column;
     overflow: hidden;
     z-index: 100;
-    transition: margin-left 0.3s var(--spring), transform 0.3s var(--spring), background 0.4s var(--spring), border-color 0.4s var(--spring);
-    --sidebar-icon-dim: rgba(255,255,255,0.4);
+    transition:
+      margin-left 0.3s var(--spring),
+      transform 0.3s var(--spring),
+      background 0.4s var(--spring),
+      border-color 0.4s var(--spring);
+    --sidebar-icon-dim: rgba(255, 255, 255, 0.4);
     -webkit-app-region: drag; /* Cho phép kéo thả ở vùng trống của Sidebar */
   }
 
@@ -141,7 +195,7 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     border-right: 0.5px solid rgba(0, 0, 0, 0.1);
-    --sidebar-icon-dim: rgba(0,0,0,0.35);
+    --sidebar-icon-dim: rgba(0, 0, 0, 0.35);
   }
 
   .sidebar-overlay {
@@ -172,12 +226,14 @@
     gap: 8px;
     width: 100%;
     -webkit-app-region: no-drag;
-    box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.08); /* App Store subtle border */
-    transition: background 0.3s var(--spring), box-shadow 0.3s var(--spring);
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.08); /* App Store subtle border */
+    transition:
+      background 0.3s var(--spring),
+      box-shadow 0.3s var(--spring);
   }
   :global(html.light) .sidebar-search-container {
     background: rgba(0, 0, 0, 0.06);
-    box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.08);
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.08);
   }
 
   .sidebar-search-input {
@@ -192,12 +248,18 @@
   .sidebar-search-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
-  :global(html.light) .sidebar-search-input { color: #1D1D1F; }
-  :global(html.light) .sidebar-search-input::placeholder { color: rgba(0,0,0,0.3); }
+  :global(html.light) .sidebar-search-input {
+    color: #1d1d1f;
+  }
+  :global(html.light) .sidebar-search-input::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+  }
 
   .mobile-close {
     display: none;
-    background: none; border: none; padding: 4px;
+    background: none;
+    border: none;
+    padding: 4px;
     cursor: pointer;
     -webkit-app-region: no-drag;
   }
@@ -231,23 +293,23 @@
     font-weight: 400;
   }
   :global(html.light) .nav-item:hover {
-    color: #1D1D1F;
+    color: #1d1d1f;
     background: rgba(0, 0, 0, 0.05);
   }
   :global(html.light) .nav-item.active {
     background: rgba(0, 0, 0, 0.1);
-    color: #1D1D1F;
+    color: #1d1d1f;
     font-weight: 600;
   }
   :global(html.light) .no-results {
-    color: rgba(0,0,0,0.35);
+    color: rgba(0, 0, 0, 0.35);
   }
 
   .no-results {
     padding: 20px 12px;
     text-align: center;
     font-size: 12px;
-    color: rgba(255,255,255,0.4);
+    color: rgba(255, 255, 255, 0.4);
     font-style: italic;
   }
 
@@ -259,14 +321,14 @@
     flex-shrink: 0;
     color: inherit;
   }
-  
+
   .nav-item:hover {
     color: white;
   }
   :global(html.light) .nav-item:hover {
-    color: #1D1D1F;
+    color: #1d1d1f;
   }
-  
+
   .nav-icon {
     color: var(--accent);
   }
@@ -299,7 +361,7 @@
     text-align: left;
     -webkit-app-region: no-drag;
   }
-  
+
   .user-row:hover {
     background: rgba(255, 255, 255, 0.08); /* Minimal hover like Codex */
   }
@@ -313,29 +375,57 @@
   }
 
   .avatar {
-    width: 36px; height: 36px; border-radius: 50%; /* Completely circular App Store style */
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; /* Completely circular App Store style */
     background: rgba(255, 255, 255, 0.1);
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 0 0 0.5px rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.1);
   }
 
   .user-name {
-    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 15px; font-weight: 600; color: rgba(255, 255, 255, 0.95);
+    font-family:
+      "SF Pro Display",
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
     letter-spacing: -0.015em;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .user-role {
-    font-size: 12px; color: rgba(255, 255, 255, 0.4); margin-top: 1px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .user-details { flex: 1; min-width: 0; }
+  .user-details {
+    flex: 1;
+    min-width: 0;
+  }
 
-  :global(html.light) .avatar { background: rgba(0,0,0,0.06); box-shadow: 0 0 0 0.5px rgba(0,0,0,0.08); }
-  :global(html.light) .user-name { color: #1D1D1F; }
-  :global(html.light) .user-role { color: rgba(0,0,0,0.4); }
-  :global(html.light) .user-row:hover { background: rgba(0, 0, 0, 0.04); }
+  :global(html.light) .avatar {
+    background: rgba(0, 0, 0, 0.06);
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+  }
+  :global(html.light) .user-name {
+    color: #1d1d1f;
+  }
+  :global(html.light) .user-role {
+    color: rgba(0, 0, 0, 0.4);
+  }
+  :global(html.light) .user-row:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
 
   @media (min-width: 769px) {
     .sidebar.desktop-closed {
@@ -346,7 +436,9 @@
   @media (max-width: 768px) {
     .sidebar {
       position: fixed;
-      top: 0; left: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
       /* Apply direct vibrancy background for mobile when there's no Electron window context */
       background: rgba(20, 20, 22, 0.7);
       backdrop-filter: blur(40px) saturate(150%);

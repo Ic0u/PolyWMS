@@ -94,6 +94,10 @@
     a.click();
     URL.revokeObjectURL(url);
   }
+
+  function printReport() {
+    window.print();
+  }
 </script>
 
 <svelte:head><title>Báo cáo - Poly WMS</title></svelte:head>
@@ -101,10 +105,16 @@
 <div class="fade-in">
   <div class="toolbar" style="margin-bottom:32px">
     <h1 class="page-title" style="margin-bottom:0">Báo cáo & Thống kê</h1>
-    <button class="btn btn-primary btn-sm" onclick={exportCSV}>
-      <Icon name="download" size={13} color="white" strokeWidth={2.5} />
-      Xuất CSV
-    </button>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick={exportCSV}>
+        <Icon name="download" size={13} color="white" strokeWidth={2.5} />
+        Xuất CSV
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick={printReport}>
+        <Icon name="print" size={13} color="var(--text)" strokeWidth={2} />
+        In / Xuất PDF
+      </button>
+    </div>
   </div>
 
   <!-- ── Summary Cards ── -->
