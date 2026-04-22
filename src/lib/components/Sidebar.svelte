@@ -31,6 +31,7 @@
       { href: "/suppliers", icon: "suppliers", label: "Nhà cung cấp" },
       { href: "/stocktake", icon: "stocktake", label: "Kiểm kê" },
       { href: "/audit", icon: "audit", label: "Nhật ký" },
+      { href: "/users", icon: "users", label: "Người dùng" },
     ],
     admin: [
       { href: "/", icon: "dashboard", label: "Dashboard" },

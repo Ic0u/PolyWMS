@@ -125,6 +125,15 @@
     showModal = false;
   }
   function remove(p: Product) {
+    // TS-Mgr10: Block delete if product has transactions
+    const hasTransactions = $transactions.some((t) => t.product === p.name);
+    if (hasTransactions) {
+      showAlert(
+        "Không thể xóa sản phẩm đang có giao dịch. Hãy xử lý giao dịch trước.",
+        "error",
+      );
+      return;
+    }
     if (confirm(`Xóa "${p.name}"?`)) {
       products.update((list) => list.filter((x) => x.id !== p.id));
       addAuditLog(`Xóa SP: ${p.name}`);
@@ -134,13 +143,18 @@
 
   function addCategory() {
     const name = newCatName.trim();
-    if (!name) return;
+    if (!name) {
+      showAlert("Vui lòng nhập tên danh mục.", "error");
+      return;
+    }
     if ($catStore.includes(name)) {
-      showAlert("Danh mục này đã tồn tại", "error");
+      showAlert("Danh mục này đã tồn tại!", "error");
       return;
     }
     catStore.update((list) => [...list, name]);
+    addAuditLog(`Thêm danh mục: ${name}`);
     newCatName = "";
+    showAlert("Đã thêm danh mục mới");
   }
 
   let editingCat = $state<{ old: string; newName: string } | null>(null);

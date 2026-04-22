@@ -46,7 +46,7 @@
       return;
     }
 
-    if (!foundUser.active) {
+    if (foundUser.active !== true) {
       showAlert("Tài khoản đã bị vô hiệu hoá. Liên hệ quản trị viên.", "error");
       return;
     }
