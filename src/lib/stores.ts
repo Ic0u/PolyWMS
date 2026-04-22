@@ -13,12 +13,17 @@ export interface Product {
 }
 
 export interface Transaction {
+  voucherId: string;
   date: string;
   type: 'import' | 'export';
   product: string;
   qty: number;
   note: string;
   user: string;
+  status: 'pending' | 'approved' | 'rejected';
+  approvedBy?: string;
+  approvedAt?: string;
+  rejectReason?: string;
 }
 
 export interface Supplier {
@@ -77,7 +82,7 @@ export interface Task {
 }
 
 // ── Store Version (bump this whenever DEFAULT_* data changes) ──
-const STORE_VERSION = '7';
+const STORE_VERSION = '8';
 
 if (browser) {
   const savedVersion = localStorage.getItem('opus_store_version');
@@ -142,12 +147,12 @@ const DEFAULT_PRODUCTS: Product[] = [
 ];
 
 const DEFAULT_TRANSACTIONS: Transaction[] = [
-  { date: '17/03/2026 08:30', type: 'import', product: 'iPhone 15 Pro Max',     qty: 50, note: 'Nhập lô mới', user: 'staff1' },
-  { date: '16/03/2026 15:20', type: 'export', product: 'AirPods Pro 2',         qty: 20, note: 'Đơn hàng #1023', user: 'staff1' },
-  { date: '16/03/2026 10:00', type: 'import', product: 'Laptop Dell XPS 15',   qty: 15, note: 'Bổ sung kho', user: 'manager1' },
-  { date: '15/03/2026 14:45', type: 'export', product: 'MacBook Air M3',        qty: 5,  note: 'Đơn hàng #1020', user: 'staff1' },
-  { date: '15/03/2026 09:10', type: 'import', product: 'Bàn phím Logitech MX', qty: 30, note: 'Nhập lô Q1', user: 'staff1' },
-  { date: '14/03/2026 16:30', type: 'export', product: 'Samsung Galaxy S24',    qty: 12, note: 'Đơn hàng #1018', user: 'staff2' },
+  { voucherId: 'PN001', date: '17/03/2026 08:30', type: 'import', product: 'iPhone 15 Pro Max',     qty: 50, note: 'Nhập lô mới', user: 'an', status: 'approved', approvedBy: 'trinh', approvedAt: '17/03/2026 09:00' },
+  { voucherId: 'PX001', date: '16/03/2026 15:20', type: 'export', product: 'AirPods Pro 2',         qty: 20, note: 'Đơn hàng #1023', user: 'an', status: 'approved', approvedBy: 'trinh', approvedAt: '16/03/2026 16:00' },
+  { voucherId: 'PN002', date: '16/03/2026 10:00', type: 'import', product: 'Laptop Dell XPS 15',   qty: 15, note: 'Bổ sung kho', user: 'trinh', status: 'approved', approvedBy: 'tam', approvedAt: '16/03/2026 10:30' },
+  { voucherId: 'PX002', date: '15/03/2026 14:45', type: 'export', product: 'MacBook Air M3',        qty: 5,  note: 'Đơn hàng #1020', user: 'an', status: 'approved', approvedBy: 'trinh', approvedAt: '15/03/2026 15:00' },
+  { voucherId: 'PN003', date: '15/03/2026 09:10', type: 'import', product: 'Bàn phím Logitech MX', qty: 30, note: 'Nhập lô Q1', user: 'an', status: 'approved', approvedBy: 'trinh', approvedAt: '15/03/2026 10:00' },
+  { voucherId: 'PX003', date: '14/03/2026 16:30', type: 'export', product: 'Samsung Galaxy S24',    qty: 12, note: 'Đơn hàng #1018', user: 'bao', status: 'approved', approvedBy: 'trinh', approvedAt: '14/03/2026 17:00' },
 ];
 
 const DEFAULT_SUPPLIERS: Supplier[] = [
