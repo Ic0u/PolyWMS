@@ -116,7 +116,6 @@
           "/stocktake",
           "/audit",
           "/tasks",
-          "/users",
         ],
       };
 
